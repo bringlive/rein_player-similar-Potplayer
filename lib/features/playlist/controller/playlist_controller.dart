@@ -1,6 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/playlist/models/album.dart';
@@ -23,16 +24,24 @@ class PlaylistController extends GetxController {
   final RxString selectedFolderPath = "".obs;
   final FocusNode playlistNameFocusNode = FocusNode();
 
-  void togglePlaylistWindow() async {
+  void togglePlaylistWindow() {
+    // Toggle immediately for instant UI feedback
+    final wasOpened = isPlaylistWindowOpened.value;
+    isPlaylistWindowOpened.value = !wasOpened;
+
+    // Resize window in background without blocking UI
+    _resizeWindowForPlaylist(wasOpened);
+  }
+
+  Future<void> _resizeWindowForPlaylist(bool wasOpened) async {
     final currentSize = await windowManager.getSize();
-    if (isPlaylistWindowOpened.value) {
-      windowManager.setSize(Size(
+    if (wasOpened) {
+      await windowManager.setSize(Size(
           currentSize.width - playlistWindowWidth.value, currentSize.height));
     } else {
-      windowManager.setSize(Size(
+      await windowManager.setSize(Size(
           currentSize.width + playlistWindowWidth.value, currentSize.height));
     }
-    isPlaylistWindowOpened.value = !isPlaylistWindowOpened.value;
   }
 
   void updatePlaylistWindowSizeOnDrag(DragUpdateDetails details) {
@@ -60,15 +69,16 @@ class PlaylistController extends GetxController {
   void createNewPlaylist() async {
     if (playlistNameController.text.trim().isEmpty ||
         selectedFolderPath.isEmpty) {
-      Get.snackbar('Error', 'Please fill in all fields',
-          snackPosition: SnackPosition.TOP, maxWidth: 500);
+      RpSnackbar.error(message: 'Please fill in all fields');
       return;
     }
 
     if (AlbumController.to.albums
         .any((album) => album.location == selectedFolderPath.value)) {
-      Get.snackbar('Error', 'Album already added',
-          snackPosition: SnackPosition.TOP, maxWidth: 500);
+      RpSnackbar.warning(
+        title: 'Already Added',
+        message: 'This album is already in your playlist',
+      );
       return;
     }
 
@@ -85,6 +95,11 @@ class PlaylistController extends GetxController {
         .updateSelectedAlbumIndex(AlbumController.to.albums.length - 1);
     clearForm();
     Get.back();
+
+    RpSnackbar.success(
+      title: 'Playlist Created',
+      message: 'New playlist has been added successfully',
+    );
   }
 
   void clearForm() {

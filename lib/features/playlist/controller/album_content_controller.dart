@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:get/get.dart';
 import 'package:path/path.dart' as path;
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
@@ -210,5 +211,90 @@ class AlbumContentController extends GetxController {
     final isInPath = normalizedItemPath.startsWith(normalizedDirectoryPath) ||
         normalizedItemPath == normalizedDirectoryPath;
     return isInPath;
+  }
+
+  // Context menu actions
+  void removeItemFromPlaylist(PlaylistItem item) {
+    currentContent.removeWhere((media) => media.location == item.location);
+  }
+
+  Future<bool> deleteItemFromDisk(PlaylistItem item) async {
+    try {
+      final file = File(item.location);
+      if (await file.exists()) {
+        await file.delete();
+        // Also remove from playlist after deletion
+        removeItemFromPlaylist(item);
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  Future<void> playItem(PlaylistItem item) async {
+    if (item.isDirectory) {
+      loadDirectory(item.location);
+    } else if (isMediaFile(item.location)) {
+      AlbumController.to.updateAlbumCurrentItemToPlay(item.location);
+      await AlbumController.to.dumpAllAlbumsToStorage();
+      await VideoAndControlController.to
+          .loadVideoFromUrl(item.toVideoOrAudioItem());
+    }
+  }
+
+  Future<Map<String, dynamic>> getFileProperties(PlaylistItem item) async {
+    try {
+      final file = File(item.location);
+      if (!await file.exists()) {
+        return {'error': 'File not found'};
+      }
+
+      final stat = await file.stat();
+      final fileSize = stat.size;
+      final modified = stat.modified;
+      final extension =
+          path.extension(item.location).toUpperCase().replaceAll('.', '');
+
+      // Format file size
+      String formatFileSize(int bytes) {
+        if (bytes < 1024) return '$bytes B';
+        if (bytes < 1024 * 1024) {
+          return '${(bytes / 1024).toStringAsFixed(2)} KB';
+        }
+        if (bytes < 1024 * 1024 * 1024) {
+          return '${(bytes / (1024 * 1024)).toStringAsFixed(2)} MB';
+        }
+        return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(2)} GB';
+      }
+
+      return {
+        'name': item.name,
+        'path': item.location,
+        'size': formatFileSize(fileSize),
+        'format': extension,
+        'modified': modified.toString().split('.')[0],
+        'directory': path.dirname(item.location),
+      };
+    } catch (e) {
+      return {'error': 'Failed to get file properties'};
+    }
+  }
+
+  void showInFileExplorer(String filePath) async {
+    try {
+      final directory = path.dirname(filePath);
+      // Use platform-specific commands
+      if (Platform.isMacOS) {
+        await Process.run('open', ['-R', filePath]);
+      } else if (Platform.isWindows) {
+        await Process.run('explorer', ['/select,', filePath]);
+      } else if (Platform.isLinux) {
+        await Process.run('xdg-open', [directory]);
+      }
+    } catch (e) {
+      // Handle error silently
+    }
   }
 }

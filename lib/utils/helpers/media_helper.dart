@@ -44,7 +44,7 @@ class RpMediaHelper {
   static bool isMediaFile(String filePath) {
     final allTypes = [
       ...RpFileExtensions.audioExtensions,
-      ...RpFileExtensions.videoExtensions
+      ...RpFileExtensions.videoExtensions,
     ];
     final extension = path.extension(filePath).toLowerCase().trim();
     return allTypes.contains(extension);
@@ -99,7 +99,6 @@ class RpMediaHelper {
       matchB = numberPrefix.firstMatch(b);
     }
 
-
     if (matchA != null && matchB != null) {
       int numberA = int.parse(matchA.group(1)!);
       int numberB = int.parse(matchB.group(1)!);
@@ -116,7 +115,8 @@ class RpMediaHelper {
   }
 
   static Future<List<PlaylistItem>> flattenDropItemsFromDirectory(
-      String dirPath) async {
+    String dirPath,
+  ) async {
     final List<PlaylistItem> mediaFiles = [];
 
     try {
@@ -149,12 +149,14 @@ class RpMediaHelper {
         if (!RpMediaHelper.isPlaylistItemSupportedAndNotSubtitle(path)) {
           continue;
         }
-        mediaFiles.add(PlaylistItem(
-          name: name,
-          location: path,
-          isDirectory: false,
-          type: RpMediaHelper.getPlaylistItemType(path),
-        ));
+        mediaFiles.add(
+          PlaylistItem(
+            name: name,
+            location: path,
+            isDirectory: false,
+            type: RpMediaHelper.getPlaylistItemType(path),
+          ),
+        );
       }
       mediaFiles.sort(RpMediaHelper.sortMediaFiles);
 

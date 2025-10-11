@@ -53,3 +53,5 @@ ReinPlayer.AppDir/rein_player
 ReinPlayer.AppDir/lib
 ReinPlayer.AppDir/.DirIcon
 ReinPlayer-x86_64.AppImage
+
+.fvm/

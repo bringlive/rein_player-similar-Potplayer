@@ -20,11 +20,14 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
     // Ensure the controller is available
     if (!Get.isRegistered<KeyboardPreferencesController>()) {
       return Dialog(
-        backgroundColor: RpColors.gray_900,
+        backgroundColor: Colors.grey[900],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Container(
           width: 400,
           height: 200,
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           child: const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -33,7 +36,7 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
                 SizedBox(height: 16),
                 Text(
                   'Loading keyboard preferences...',
-                  style: TextStyle(color: RpColors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
             ),
@@ -43,7 +46,10 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
     }
 
     return Dialog(
-      backgroundColor: RpColors.gray_900,
+      backgroundColor: Colors.grey[900],
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.8,
         height: MediaQuery.of(context).size.height * 0.8,
@@ -53,7 +59,7 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
           minWidth: 400,
           minHeight: 500,
         ),
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -280,9 +286,12 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
           }
         },
         child: Dialog(
-          backgroundColor: RpColors.gray_900,
+          backgroundColor: Colors.grey[900],
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
           child: Container(
-            padding: const EdgeInsets.all(30),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/settings/controller/settings_controller.dart';
 import 'package:rein_player/utils/constants/rp_keys.dart';
@@ -50,9 +51,14 @@ class SubtitleController extends GetxController {
         currentSubtitleContent = content;
         isSubtitleEnabled.value = true;
         await player.setSubtitleTrack(SubtitleTrack.data(content));
+        RpSnackbar.success(
+          title: 'Subtitle Loaded',
+          message: 'Subtitle file loaded successfully',
+        );
       } else {
-        Get.snackbar('Error', 'Only SRT and VTT are supported',
-            snackPosition: SnackPosition.TOP, maxWidth: 500);
+        RpSnackbar.error(
+          message: 'Only SRT and VTT subtitle formats are supported',
+        );
       }
     }
   }
