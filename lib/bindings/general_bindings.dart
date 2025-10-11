@@ -7,6 +7,7 @@ import 'package:rein_player/features/playback/controller/video_and_controls_cont
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/volume_controller.dart';
 import 'package:rein_player/features/playback/controller/playback_speed_controller.dart';
+import 'package:rein_player/features/playback/controller/seek_preview_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/player_frame/controller/fullscreen_overlay_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
@@ -32,6 +33,7 @@ class GeneralBindings extends Bindings {
     Get.put(FullscreenOverlayController());
     Get.put(VolumeController());
     Get.put(PlaybackSpeedController());
+    Get.put(SeekPreviewController());
     Get.put(WindowInfoController());
     Get.put(AlbumController());
     Get.put(AlbumContentController());
