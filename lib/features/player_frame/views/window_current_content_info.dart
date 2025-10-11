@@ -38,7 +38,7 @@ class RpWindowCurrentContentInfo extends StatelessWidget {
                   ),
 
                   /// title
-                  if (RpDeviceUtils.isLinux())
+                  if (!RpDeviceUtils.isWindows())
                     Obx(() {
                       final width =
                           WindowController.to.currentWindowSize.value.width;

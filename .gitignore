@@ -45,7 +45,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-
 #Custom
 test_video.mp4
 ReinPlayer.AppDir/data
@@ -53,3 +52,6 @@ ReinPlayer.AppDir/rein_player
 ReinPlayer.AppDir/lib
 ReinPlayer.AppDir/.DirIcon
 ReinPlayer-x86_64.AppImage
+
+# FVM Version Cache
+.fvm/
