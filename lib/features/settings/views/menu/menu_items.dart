@@ -117,8 +117,6 @@ List<RpMenuItem> _buildAudioTrackMenu(
     return audioMenuItems;
   }
 
-  print("availableAudioTracks: ${availableAudioTracks.length}");
-
   // Add all available audio tracks
   for (int i = 0; i < availableAudioTracks.length; i++) {
     final track = availableAudioTracks[i];
