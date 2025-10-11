@@ -9,6 +9,7 @@ import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/features/playlist/models/playlist_item.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
+import 'package:rein_player/utils/device/rp_device_utils.dart';
 
 import '../controller/album_content_controller.dart';
 
@@ -78,7 +79,7 @@ class RpAlbumItems extends StatelessWidget {
         ),
         const MenuDivider(),
         MenuItem(
-          label: 'Show in Finder',
+          label: RpDeviceUtils.isMacOS() ? 'Show in Finder' : 'Show in Explorer',
           icon: Icons.folder_open,
           onSelected: () {
             AlbumContentController.to.showInFileExplorer(media.location);

@@ -46,4 +46,8 @@ class RpDeviceUtils {
   static bool isLinux() {
     return Platform.isLinux;
   }
+
+  static bool isMacOS() {
+    return Platform.isMacOS;
+  }
 }
