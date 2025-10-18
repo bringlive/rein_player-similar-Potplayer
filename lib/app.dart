@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rein_player/bindings/general_bindings.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/playback/views/video_and_controls_screen.dart';
+import 'package:rein_player/features/playback/views/seek_preview_overlay.dart';
 import 'package:rein_player/features/player_frame/controller/keyboard_shortcut_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_controller.dart';
@@ -57,6 +58,7 @@ class RpApp extends StatelessWidget {
                   ),
                 ),
               ),
+              const SeekPreviewOverlay(),
               const DeveloperLogWindow(),
             ],
           );
