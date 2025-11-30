@@ -9,6 +9,7 @@ import 'package:rein_player/features/playback/controller/subtitle_controller.dar
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/settings/views/menu/menu_item.dart';
 import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
+import 'package:rein_player/features/settings/views/about_dialog.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
 
@@ -88,6 +89,15 @@ List<RpMenuItem> get defaultMenuData {
               .changePlaylistType(PlaylistType.potPlayerPlaylistType),
         ),
       ],
+    ),
+
+    /// About
+    RpMenuItem(
+      text: "About",
+      icon: Icons.info_outline,
+      onTap: () {
+        Get.dialog(const RpAboutDialog());
+      },
     ),
 
     /// Exit

@@ -101,6 +101,11 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Adaptive seeking speed based on video length
 - Enhanced volume control (0-200%) with persistent settings - Because my PC speakers are not that loud 🤣
 - Integrate with GNOME to show as default video player if installed with the install script
+- Command-line interface support:
+  - `reinplayer --version` or `-v`: Display version information
+  - `reinplayer --help` or `-h`: Show help and usage information
+  - `reinplayer <file>`: Open and play a video file directly
+- About dialog accessible from right-click menu showing version, description, and GitHub link
 
 ---
 
@@ -189,6 +194,36 @@ Download player icon: [Download](https://github.com/Ahurein/rein_player/raw/main
 | **macOS**   | ✅        | **NEW!** Now supported with native builds available                                            |
 | **Android** | ❌        | Not supported – designed for desktop use                                                       |
 | **iOS**     | ❌        | Not supported – designed for desktop use                                                       |
+
+---
+
+## 💻 Command-Line Usage
+
+ReinPlayer supports standard CLI flags for version information and help:
+
+```bash
+# Display version information
+reinplayer --version
+reinplayer -v
+
+# Show help and usage information
+reinplayer --help
+reinplayer -h
+
+# Play a video file
+reinplayer /path/to/video.mp4
+reinplayer ~/Videos/movie.mkv
+```
+
+**Example output:**
+
+```bash
+$ reinplayer --version
+ReinPlayer 1.0.2
+A modern video player for Linux and macOS
+
+Repository: https://github.com/Ahurein/rein_player
+```
 
 ---
 
