@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
+import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 
 class AudioTrackController extends GetxController {
@@ -36,12 +37,13 @@ class AudioTrackController extends GetxController {
     try {
       await player.setAudioTrack(track);
       currentAudioTrack.value = track;
+      RpSnackbar.success(
+        title: 'Audio Track Changed',
+        message: 'Switched to ${getAudioTrackDisplayName(track)}',
+      );
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to switch audio track: $e',
-        snackPosition: SnackPosition.TOP,
-        maxWidth: 500,
+      RpSnackbar.error(
+        message: 'Failed to switch audio track: $e',
       );
     }
   }

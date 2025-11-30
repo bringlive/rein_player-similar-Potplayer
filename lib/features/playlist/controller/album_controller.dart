@@ -28,7 +28,11 @@ class AlbumController extends GetxController {
   }
 
   Future<void> updateSelectedAlbumIndex(int index) async {
-    if (index == selectedAlbumIndex.value) return;
+    if (index == selectedAlbumIndex.value &&
+        AlbumContentController.to.currentContent.isNotEmpty) {
+      return;
+    }
+
     AlbumContentController.to.clearNavigationStack();
     selectedAlbumIndex.value = index;
     AlbumContentController.to.currentContent.value = [];

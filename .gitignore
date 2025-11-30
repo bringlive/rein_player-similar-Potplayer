@@ -53,5 +53,4 @@ ReinPlayer.AppDir/lib
 ReinPlayer.AppDir/.DirIcon
 ReinPlayer-x86_64.AppImage
 
-# FVM Version Cache
 .fvm/

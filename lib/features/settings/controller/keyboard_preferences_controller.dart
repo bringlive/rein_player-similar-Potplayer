@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/utils/constants/rp_keys.dart';
 import 'package:rein_player/utils/local_storage/rp_local_storage.dart';
 
@@ -98,7 +99,7 @@ class KeyboardPreferencesController extends GetxController {
       }
       await storage.saveData(RpKeysConstants.keyboardBindingsKey, saveData);
     } catch (e) {
-
+      // do nothing
     }
   }
 
@@ -113,11 +114,10 @@ class KeyboardPreferencesController extends GetxController {
 
         update();
 
-        Get.snackbar(
-          'Key Binding Updated',
-          'Swapped keys for "${actionDescriptions[action]}" and "${actionDescriptions[existingAction]}"',
-          snackPosition: SnackPosition.TOP,
-          maxWidth: 500,
+        RpSnackbar.info(
+          title: 'Key Binding Updated',
+          message:
+              'Swapped keys for "${actionDescriptions[action]}" and "${actionDescriptions[existingAction]}"',
         );
       }
     } else {
@@ -125,11 +125,10 @@ class KeyboardPreferencesController extends GetxController {
 
       update();
 
-      Get.snackbar(
-        'Key Binding Updated',
-        '${actionDescriptions[action]} is now assigned to ${getKeyDisplayName(key)}',
-        snackPosition: SnackPosition.TOP,
-        maxWidth: 500,
+      RpSnackbar.success(
+        title: 'Key Binding Updated',
+        message:
+            '${actionDescriptions[action]} is now assigned to ${getKeyDisplayName(key)}',
       );
     }
 
@@ -153,11 +152,9 @@ class KeyboardPreferencesController extends GetxController {
 
     await saveKeyBindings();
 
-    Get.snackbar(
-      'Reset Complete',
-      'Keyboard bindings have been reset to defaults',
-      snackPosition: SnackPosition.TOP,
-      maxWidth: 500,
+    RpSnackbar.success(
+      title: 'Reset Complete',
+      message: 'Keyboard bindings have been reset to defaults',
     );
   }
 
