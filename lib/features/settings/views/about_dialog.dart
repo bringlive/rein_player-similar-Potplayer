@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
+import 'package:rein_player/utils/constants/app_info.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 
 class RpAboutDialog extends StatefulWidget {
   const RpAboutDialog({super.key});
@@ -14,9 +14,9 @@ class RpAboutDialog extends StatefulWidget {
 }
 
 class _RpAboutDialogState extends State<RpAboutDialog> {
-  String _version = 'Loading...';
-  String _buildNumber = '';
-  String _description = '';
+   String _version = AppInfo.version;
+   String _buildNumber = AppInfo.buildNumber;
+  final String _description = AppInfo.description;
 
   @override
   void initState() {
@@ -30,21 +30,15 @@ class _RpAboutDialogState extends State<RpAboutDialog> {
       setState(() {
         _version = packageInfo.version;
         _buildNumber = packageInfo.buildNumber;
-        _description = "A fast and intuitive video player with a clean UI, inspired by PotPlayer, designed for Linux and macOS";
       });
     } catch (e) {
-      setState(() {
-        _version = 'Unknown';
-        _buildNumber = '';
-        _description = 'Unknown';
-      });
+      // do nothing
     }
   }
 
-
   Future<void> _openGitHub() async {
     try {
-      await launchUrl(Uri.parse('https://github.com/Ahurein/rein_player'));
+      await launchUrl(Uri.parse(AppInfo.repository));
     } catch (e) {
       RpSnackbar.error(message: 'Error launching URL: $e');
     }
@@ -94,7 +88,7 @@ class _RpAboutDialogState extends State<RpAboutDialog> {
 
               // App Name
               Text(
-                'ReinPlayer',
+                AppInfo.appName,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                       color: RpColors.white,

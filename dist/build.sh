@@ -34,7 +34,7 @@ function build_deb_package() {
     done
     cp -fr "${PROJECT_DIR}/build/linux/x64/release/bundle/." "${PACKAGE_DIR}/usr/lib/reinplayer"
     ln -sf "../lib/reinplayer/rein_player" "${PACKAGE_DIR}/usr/bin/reinplayer"
-    dpkg-deb --build --root-owner-group "${PACKAGE_DIR}" "${PROJECT_DIR}/build/reinplayer_linux_amd64.deb"
+    dpkg-deb --build --root-owner-group "${PACKAGE_DIR}" "${PROJECT_DIR}/build/reinplayer_${VERSION}_linux_amd64.deb"
 }
 
 function build_snap_package() {
@@ -52,11 +52,14 @@ function build_snap_package() {
     for library in "${PACKAGE_DIR}/lib/"*.so; do
         strip "$library"
     done
+    echo "Snap package prepared. The snapcraft build will include version ${VERSION} in the filename."
 }
 
 function build_appimage_package() {
     APP_IMAGE_TOOL_URL="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage"
     PACKAGE_DIR="${PROJECT_DIR}/build/ReinPlayer.AppDir"
+    VERSION="$(extract_version)"
+    validate_version "${VERSION}"
     if ! command -v appimagetool &> /dev/null; then
       wget -O appimagetool "${APP_IMAGE_TOOL_URL}"
       chmod +x appimagetool
@@ -70,7 +73,7 @@ function build_appimage_package() {
         strip "$library"
     done
     appimagetool "${PACKAGE_DIR}"
-    mv "./ReinPlayer-x86_64.AppImage" "${PROJECT_DIR}/build/"
+    mv "./ReinPlayer-x86_64.AppImage" "${PROJECT_DIR}/build/ReinPlayer-${VERSION}-x86_64.AppImage"
 }
 function build_dmg_package() {
     VERSION="$(extract_version)"
