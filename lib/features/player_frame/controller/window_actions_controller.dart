@@ -1,6 +1,7 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:get/get.dart';
 import 'package:rein_player/features/playback/controller/volume_controller.dart';
+import 'package:rein_player/utils/device/rp_device_utils.dart';
 import 'package:window_manager/window_manager.dart';
 
 class WindowActionsController extends GetxController {
@@ -33,10 +34,20 @@ class WindowActionsController extends GetxController {
     isFullScreenMode.value = !isFullScreenMode.value;
     if (isFullScreenMode.value) {
       isPinned.value = true;
+
+      if (RpDeviceUtils.isMacOS()) {
+        await windowManager.setTitleBarStyle(TitleBarStyle.hidden);
+      }
+
       await windowManager.setFullScreen(true);
       await windowManager.setAlwaysOnTop(isPinned.value);
     } else {
       isPinned.value = false;
+
+      if (RpDeviceUtils.isMacOS()) {
+        await windowManager.setTitleBarStyle(TitleBarStyle.normal);
+      }
+
       await windowManager.setFullScreen(false);
       await windowManager.setAlwaysOnTop(isPinned.value);
     }
@@ -45,6 +56,11 @@ class WindowActionsController extends GetxController {
   void exitFullscreen() async {
     if (isFullScreenMode.value) {
       isFullScreenMode.value = false;
+
+      if (RpDeviceUtils.isMacOS()) {
+        await windowManager.setTitleBarStyle(TitleBarStyle.normal);
+      }
+
       await windowManager.setFullScreen(false);
       // Reset always on top to match pinned state
       await windowManager.setAlwaysOnTop(isPinned.value);

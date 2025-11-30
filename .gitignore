@@ -45,7 +45,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-
 #Custom
 test_video.mp4
 ReinPlayer.AppDir/data

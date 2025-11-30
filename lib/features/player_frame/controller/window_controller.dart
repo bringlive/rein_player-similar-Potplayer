@@ -7,6 +7,7 @@ import 'package:rein_player/features/playback/controller/playlist_type_controlle
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
+import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_sizes.dart';
 import 'package:rein_player/utils/extensions/media_extensions.dart';
@@ -96,5 +97,17 @@ class WindowController extends GetxController with WindowListener {
         : RpSizes.initialAppWindowSize;
     isWindowLoaded.value =
         currentWindowSize.value.width >= sizeToCompareWith.width;
+  }
+
+  @override
+  void onWindowEnterFullScreen() {
+    WindowActionsController.to.isFullScreenMode.value = true;
+    super.onWindowEnterFullScreen();
+  }
+
+  @override
+  void onWindowLeaveFullScreen() {
+    WindowActionsController.to.isFullScreenMode.value = false;
+    super.onWindowLeaveFullScreen();
   }
 }

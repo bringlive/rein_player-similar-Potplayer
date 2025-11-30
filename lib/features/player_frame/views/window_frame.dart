@@ -5,12 +5,16 @@ import 'package:rein_player/features/player_frame/views/window_actions.dart';
 import 'package:rein_player/features/player_frame/views/window_current_content_info.dart';
 import 'package:rein_player/features/player_frame/views/window_player_menu.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
+import 'package:rein_player/utils/device/rp_device_utils.dart';
 
 class RpWindowFrame extends StatelessWidget {
   const RpWindowFrame({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // On macOS, left padding to avoid overlapping with traffic light buttons
+    final leftPadding = RpDeviceUtils.isMacOS() ? 70.0 : 0.0;
+
     return Container(
         height: 28,
         width: double.infinity,
@@ -20,25 +24,27 @@ class RpWindowFrame extends StatelessWidget {
           color: RpColors.gray_900,
         ),
         child: MoveWindow(
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               /// menu
               Row(
                 children: [
+                  SizedBox(width: leftPadding),
+
                   /// player name and menu
-                  RpWindowPlayerMenu(),
+                  const RpWindowPlayerMenu(),
 
                   /// black line
-                  RpVerticalDivider(),
+                  const RpVerticalDivider(),
 
                   /// video info
-                  RpWindowCurrentContentInfo(),
+                  const RpWindowCurrentContentInfo(),
                 ],
               ),
 
               /// window icons
-              RpWindowActions()
+              const RpWindowActions()
             ],
           ),
         ));

@@ -5,6 +5,7 @@ import 'package:rein_player/utils/constants/rp_app_icons.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
 import 'package:rein_player/utils/constants/rp_sizes.dart';
+import 'package:rein_player/utils/device/rp_device_utils.dart';
 
 import '../../../common/widgets/rp_vertical_divider.dart';
 
@@ -15,6 +16,8 @@ class RpWindowActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isMacOS = RpDeviceUtils.isMacOS();
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -41,46 +44,51 @@ class RpWindowActions extends StatelessWidget {
         ),
         const SizedBox(width: 10),
 
-        /// minimize
-        InkWell(
-          onTap: WindowActionsController.to.minimizeWindow,
-          child: Container(
+        /// minimize (hidden on macOS - use traffic light button)
+        if (!isMacOS) ...[
+          InkWell(
+            onTap: WindowActionsController.to.minimizeWindow,
+            child: Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.symmetric(horizontal: RpSizes.sm),
+                height: 58,
+                child: SvgPicture.asset(RpAppIcons.minimizeIcon)),
+          ),
+          const SizedBox(width: 10),
+        ],
+
+        /// maximize (hidden on macOS - use traffic light button)
+        if (!isMacOS) ...[
+          InkWell(
+            onTap: WindowActionsController.to.maximizeOrRestoreWindow,
+            child: Container(
               color: Colors.transparent,
               padding: const EdgeInsets.symmetric(horizontal: RpSizes.sm),
               height: 58,
-              child: SvgPicture.asset(RpAppIcons.minimizeIcon)),
-        ),
-        const SizedBox(width: 10),
-
-        /// maximize
-        InkWell(
-          onTap: WindowActionsController.to.maximizeOrRestoreWindow,
-          child: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.symmetric(horizontal: RpSizes.sm),
-            height: 58,
-            child: SvgPicture.asset(RpAppIcons.maximizeIcon),
+              child: SvgPicture.asset(RpAppIcons.maximizeIcon),
+            ),
           ),
-        ),
+          const SizedBox(width: 10),
+        ],
 
         /// fullscreen mode
-        const SizedBox(width: 10),
         InkWell(
           onTap: WindowActionsController.to.toggleFullScreenWindow,
           child: SvgPicture.asset(RpAppIcons.fullscreenIcon),
         ),
         const SizedBox(width: 10),
 
-        /// close
-        InkWell(
-          onTap: WindowActionsController.to.closeWindow,
-          child: Container(
-            color: Colors.transparent,
-            padding: const EdgeInsets.symmetric(horizontal: RpSizes.sm),
-            height: 58,
-            child: SvgPicture.asset(RpAppIcons.closeIcon),
+        /// close (hidden on macOS - use traffic light button)
+        if (!isMacOS)
+          InkWell(
+            onTap: WindowActionsController.to.closeWindow,
+            child: Container(
+              color: Colors.transparent,
+              padding: const EdgeInsets.symmetric(horizontal: RpSizes.sm),
+              height: 58,
+              child: SvgPicture.asset(RpAppIcons.closeIcon),
+            ),
           ),
-        ),
         const SizedBox(width: 9)
       ],
     );
