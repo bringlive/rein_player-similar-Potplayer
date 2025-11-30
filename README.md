@@ -116,6 +116,15 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Auto-load subtitles from the same folder as the video
 - Manual subtitle loading (SRT, VTT formats)
 - Enable / Disable subtitles with customizable shortcuts
+- **Comprehensive subtitle customization**:
+  - Font family selection (12+ fonts available)
+  - Adjustable font size (8-72pt)
+  - Position controls (Up/Down/Left/Right)
+  - Text alignment options (left, center, right)
+  - Text and background color pickers
+  - Adjustable outline width
+  - Real-time preview
+  - Settings persist across sessions
 
 ---
 

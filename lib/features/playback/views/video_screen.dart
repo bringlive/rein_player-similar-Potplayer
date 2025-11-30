@@ -8,6 +8,7 @@ import 'package:rein_player/features/playback/controller/video_and_controls_cont
 import 'package:rein_player/features/playback/controller/volume_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/settings/controller/menu_controller.dart';
+import 'package:rein_player/features/settings/controller/subtitle_styling_controller.dart';
 import 'package:rein_player/features/playback/views/playback_speed_overlay.dart';
 import 'package:rein_player/features/settings/views/menu/menu_items.dart';
 import 'package:rein_player/listeners/scroll_detector.dart';
@@ -47,12 +48,25 @@ class RpVideoScreen extends StatelessWidget {
                             .to.currentVideoUrl.isEmpty) {
                           return const RpNoMediaPlaceholder();
                         }
-                        return Video(
-                          key: ValueKey(
-                              VideoAndControlController.to.currentVideoUrl),
-                          controller: videoController.videoPlayerController,
-                          controls: NoVideoControls,
-                        );
+
+                        // Get subtitle styling controller
+                        final subtitleController = SubtitleStylingController.to;
+
+                        return Obx(() => Video(
+                              key: ValueKey(
+                                  VideoAndControlController.to.currentVideoUrl),
+                              controller: videoController.videoPlayerController,
+                              controls: NoVideoControls,
+                              subtitleViewConfiguration:
+                                  SubtitleViewConfiguration(
+                                padding:
+                                    subtitleController.getSubtitlePadding(),
+                                style:
+                                    subtitleController.getSubtitleTextStyle(),
+                                textAlign:
+                                    subtitleController.settings.value.textAlign,
+                              ),
+                            ));
                       }),
                     ),
 

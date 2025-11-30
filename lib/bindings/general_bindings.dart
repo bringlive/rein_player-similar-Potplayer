@@ -14,6 +14,7 @@ import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/settings/controller/menu_controller.dart';
 import 'package:rein_player/features/settings/controller/settings_controller.dart';
 import 'package:rein_player/features/settings/controller/keyboard_preferences_controller.dart';
+import 'package:rein_player/features/settings/controller/subtitle_styling_controller.dart';
 
 import '../features/player_frame/controller/window_controller.dart';
 import '../features/player_frame/controller/window_info_controller.dart';
@@ -26,6 +27,7 @@ class GeneralBindings extends Bindings {
     Get.put(KeyboardPreferencesController());
     Get.put(WindowController());
     Get.put(SubtitleController());
+    Get.put(SubtitleStylingController());
     Get.put(AudioTrackController());
     Get.put(ControlsController());
     Get.put(VideoAndControlController());
