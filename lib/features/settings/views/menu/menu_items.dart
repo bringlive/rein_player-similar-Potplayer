@@ -10,6 +10,7 @@ import 'package:rein_player/features/player_frame/controller/window_actions_cont
 import 'package:rein_player/features/settings/views/menu/menu_item.dart';
 import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
 import 'package:rein_player/features/settings/views/about_dialog.dart';
+import 'package:rein_player/features/settings/views/subtitle_settings_modal.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
 
@@ -40,6 +41,13 @@ List<RpMenuItem> get defaultMenuData {
           icon: Icons.remove,
           text: "Disable Subtitle",
           onTap: SubtitleController.to.disableSubtitle,
+        ),
+        RpMenuItem(
+          icon: Icons.settings,
+          text: "Subtitle Settings",
+          onTap: () {
+            Get.dialog(const SubtitleSettingsModal());
+          },
         ),
       ],
     ),
