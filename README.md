@@ -89,6 +89,8 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 | c                   | Increase Playback Speed | ✅           |
 | Page Up             | Goto Previous Video     | ✅           |
 | Page Down           | Goto Next Video         | ✅           |
+| Shift + Delete      | Delete Video and Skip to Next | ✅           |
+| s                   | Shuffle Playlist        | ✅           |
 
 - Enhanced fullscreen mode with edge-hover menu display and auto-hide functionality
 - Mouse wheel volume control - scroll over video to adjust volume
@@ -139,6 +141,8 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Auto-load all similar files in a folder when opening a video (e.g., play next episode automatically)
 - Smart folder highlighting - folders containing the current video are highlighted for easy navigation
 - Natural sorting for better file organization
+- **Shuffle playlist** - Randomize playlist order via keyboard shortcut (S) or context menu
+- **Delete & Skip** - Quickly delete current video permanently and skip to next
 
 ---
 
