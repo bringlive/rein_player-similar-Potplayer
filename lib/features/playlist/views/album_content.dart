@@ -79,7 +79,8 @@ class RpAlbumItems extends StatelessWidget {
         ),
         const MenuDivider(),
         MenuItem(
-          label: RpDeviceUtils.isMacOS() ? 'Show in Finder' : 'Show in Explorer',
+          label:
+              RpDeviceUtils.isMacOS() ? 'Show in Finder' : 'Show in Explorer',
           icon: Icons.folder_open,
           onSelected: () {
             AlbumContentController.to.showInFileExplorer(media.location);
@@ -124,14 +125,28 @@ class RpAlbumItems extends StatelessWidget {
             );
 
             if (confirmed == true) {
-              final success =
-                  await AlbumContentController.to.deleteItemFromDisk(media);
+              final currentVideo =
+                  VideoAndControlController.to.currentVideo.value;
+              final isCurrentlyPlaying =
+                  currentVideo?.location == media.location;
+
+              bool success;
+              if (isCurrentlyPlaying) {
+                success =
+                    await AlbumContentController.to.deleteCurrentItemAndSkip();
+              } else {
+                success =
+                    await AlbumContentController.to.deleteItemFromDisk(media);
+              }
+
               if (!success) {
                 RpSnackbar.error(message: 'Failed to delete file');
               } else {
                 RpSnackbar.success(
                   title: 'Deleted',
-                  message: 'File deleted successfully',
+                  message: isCurrentlyPlaying
+                      ? 'File deleted and skipped to next'
+                      : 'File deleted successfully',
                 );
               }
             }
