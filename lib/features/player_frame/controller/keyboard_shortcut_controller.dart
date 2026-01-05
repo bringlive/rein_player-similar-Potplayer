@@ -151,6 +151,16 @@ class KeyboardController extends GetxController {
         }
         return;
       }
+
+      // Shuffle playlist
+      if (currentKey == keyBindings['shuffle_playlist']) {
+        AlbumContentController.to.shufflePlaylistContent();
+        RpSnackbar.success(
+          title: 'Playlist Shuffled',
+          message: 'Playlist order has been randomized',
+        );
+        return;
+      }
     }
   }
 }

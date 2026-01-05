@@ -152,6 +152,10 @@ class AlbumContentController extends GetxController {
     currentContent.sort(RpMediaHelper.sortMediaFiles);
   }
 
+  void shufflePlaylistContent() {
+    currentContent.shuffle();
+  }
+
   Future<void> loadSimilarContentInDefaultAlbum(String filename, String dirPath,
       {excludeCurrentFile = true}) async {
     final List<PlaylistItem> mediaFiles =

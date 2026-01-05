@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_context_menu/flutter_context_menu.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:get/get.dart';
+import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/audio_track_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playlist_type_controller.dart';
 import 'package:rein_player/features/playback/controller/subtitle_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
+import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/settings/views/menu/menu_item.dart';
 import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
 import 'package:rein_player/features/settings/views/about_dialog.dart';
@@ -75,26 +77,46 @@ List<RpMenuItem> get defaultMenuData {
       ],
     ),
 
-    /// Playlist Type
+    /// Playlist
     RpMenuItem(
-      text: "Playlist Type",
-      icon: Icons.featured_play_list,
+      text: "Playlist",
+      icon: Icons.playlist_play,
       subMenuItems: [
+        /// Playlist Type submenu
         RpMenuItem(
-          icon: currentType == PlaylistType.defaultPlaylistType
-              ? Icons.check
-              : null,
-          text: "Default",
-          onTap: () => PlaylistTypeController.to
-              .changePlaylistType(PlaylistType.defaultPlaylistType),
+          text: "Playlist Type",
+          icon: Icons.featured_play_list,
+          subMenuItems: [
+            RpMenuItem(
+              icon: currentType == PlaylistType.defaultPlaylistType
+                  ? Icons.check
+                  : null,
+              text: "Default",
+              onTap: () => PlaylistTypeController.to
+                  .changePlaylistType(PlaylistType.defaultPlaylistType),
+            ),
+            RpMenuItem(
+              icon: currentType == PlaylistType.potPlayerPlaylistType
+                  ? Icons.check
+                  : null,
+              text: "Pot Player",
+              onTap: () => PlaylistTypeController.to
+                  .changePlaylistType(PlaylistType.potPlayerPlaylistType),
+            ),
+          ],
         ),
+
+        /// Shuffle Playlist
         RpMenuItem(
-          icon: currentType == PlaylistType.potPlayerPlaylistType
-              ? Icons.check
-              : null,
-          text: "Pot Player",
-          onTap: () => PlaylistTypeController.to
-              .changePlaylistType(PlaylistType.potPlayerPlaylistType),
+          icon: Icons.shuffle,
+          text: "Shuffle Playlist",
+          onTap: () {
+            Get.find<AlbumContentController>().shufflePlaylistContent();
+            RpSnackbar.success(
+              title: 'Playlist Shuffled',
+              message: 'Playlist order has been randomized',
+            );
+          },
         ),
       ],
     ),
