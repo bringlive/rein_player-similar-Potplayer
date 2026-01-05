@@ -297,4 +297,40 @@ class AlbumContentController extends GetxController {
       // Handle error silently
     }
   }
+
+  Future<bool> deleteCurrentItemAndSkip() async {
+    try {
+      final currentVideo = VideoAndControlController.to.currentVideo.value;
+      if (currentVideo == null) return false;
+
+      final currentIndex = currentContent.indexWhere(
+        (item) => item.location == currentVideo.location,
+      );
+
+      if (currentIndex == -1) return false;
+
+      final itemToDelete = currentContent[currentIndex];
+
+      final hasNext = currentIndex + 1 < currentContent.length;
+
+      if (hasNext) {
+        final nextItem = currentContent[currentIndex + 1];
+        await VideoAndControlController.to
+            .loadVideoFromUrl(nextItem.toVideoOrAudioItem());
+        AlbumController.to.updateAlbumCurrentItemToPlay(nextItem.location);
+        await AlbumController.to.dumpAllAlbumsToStorage();
+      }
+
+      final file = File(itemToDelete.location);
+      if (await file.exists()) {
+        await file.delete();
+        removeItemFromPlaylist(itemToDelete);
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
 }

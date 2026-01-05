@@ -230,7 +230,11 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
   }
 
   Widget _buildSubtitle(String action) {
-    const actionsToHoldShift = ['big_seek_backward', 'big_seek_forward'];
+    const actionsToHoldShift = [
+      'big_seek_backward',
+      'big_seek_forward',
+      'delete_and_skip',
+    ];
     const actionsToHoldCtrl = ['toggle_playlist', 'toggle_developer_log'];
 
     if (actionsToHoldShift.contains(action)) {

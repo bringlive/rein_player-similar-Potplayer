@@ -31,6 +31,7 @@ class KeyboardPreferencesController extends GetxController {
     'increase_speed': LogicalKeyboardKey.keyC,
     'next_track': LogicalKeyboardKey.pageDown,
     'previous_track': LogicalKeyboardKey.pageUp,
+    'delete_and_skip': LogicalKeyboardKey.delete, // With Shift
   };
 
   // Action descriptions for UI
@@ -53,6 +54,7 @@ class KeyboardPreferencesController extends GetxController {
     'increase_speed': 'Increase Playback Speed',
     'next_track': 'Next Track',
     'previous_track': 'Previous Track',
+    'delete_and_skip': 'Delete and Skip to Next',
   };
 
   @override

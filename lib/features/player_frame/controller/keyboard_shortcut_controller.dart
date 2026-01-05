@@ -1,5 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/developer/controller/developer_log_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playback_speed_controller.dart';
@@ -133,6 +134,21 @@ class KeyboardController extends GetxController {
 
       if (currentKey == keyBindings['previous_track']) {
         AlbumContentController.to.goPreviousItemInPlaylist();
+        return;
+      }
+
+      // Delete current item and skip to next (with Shift modifier)
+      if (currentKey == keyBindings['delete_and_skip'] && isShiftPressed) {
+        final success =
+            await AlbumContentController.to.deleteCurrentItemAndSkip();
+        if (success) {
+          RpSnackbar.success(
+            title: 'Deleted',
+            message: 'File deleted and skipped to next',
+          );
+        } else {
+          RpSnackbar.error(message: 'Failed to delete file');
+        }
         return;
       }
     }
