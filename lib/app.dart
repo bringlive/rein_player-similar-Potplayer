@@ -6,6 +6,7 @@ import 'package:rein_player/features/playback/controller/video_and_controls_cont
 import 'package:rein_player/features/playback/views/video_and_controls_screen.dart';
 import 'package:rein_player/features/playback/views/seek_preview_overlay.dart';
 import 'package:rein_player/features/player_frame/controller/keyboard_shortcut_controller.dart';
+import 'package:rein_player/features/player_frame/controller/navigation_context_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_controller.dart';
 import 'package:rein_player/features/player_frame/views/fullscreen_overlay.dart';
@@ -22,6 +23,7 @@ class RpApp extends StatelessWidget {
   final playlistController = Get.put(PlaylistController());
   final keyboardController = Get.put(KeyboardController());
   final windowController = Get.put(WindowController());
+  final navigationContextController = Get.put(NavigationContextController());
   final focus = FocusNode();
 
   RpApp({super.key});
