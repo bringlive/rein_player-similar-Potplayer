@@ -12,6 +12,8 @@ class KeyboardPreferencesController extends GetxController {
   final RxMap<String, LogicalKeyboardKey> keyBindings =
       <String, LogicalKeyboardKey>{}.obs;
 
+  final RxBool shortcutsEnabled = true.obs;
+
   // Default keyboard bindings
   static const Map<String, LogicalKeyboardKey> defaultBindings = {
     'play_pause': LogicalKeyboardKey.space,
@@ -79,6 +81,10 @@ class KeyboardPreferencesController extends GetxController {
     try {
       final savedBindings =
           storage.readData<Map>(RpKeysConstants.keyboardBindingsKey);
+
+      // Load shortcuts enabled state
+      final savedEnabled = storage.readData<bool>(RpKeysConstants.keyboardShortcutsEnabledKey);
+      shortcutsEnabled.value = savedEnabled ?? true;
 
       if (savedBindings != null) {
         // Convert saved data back to LogicalKeyboardKey objects
@@ -194,5 +200,11 @@ class KeyboardPreferencesController extends GetxController {
 
   LogicalKeyboardKey? getKeyForAction(String action) {
     return keyBindings[action];
+  }
+
+  Future<void> toggleShortcuts(bool enabled) async {
+    shortcutsEnabled.value = enabled;
+    await storage.saveData(RpKeysConstants.keyboardShortcutsEnabledKey, enabled);
+    update();
   }
 }

@@ -5,11 +5,13 @@ class Settings {
   bool isSubtitleEnabled;
   PlaylistType playlistType;
   DoubleClickAction doubleClickAction;
+  PlaylistLoadBehavior playlistLoadBehavior;
 
   Settings({
     this.isSubtitleEnabled = true,
     this.playlistType = PlaylistType.defaultPlaylistType,
     this.doubleClickAction = DoubleClickAction.toggleWindowSize,
+    this.playlistLoadBehavior = PlaylistLoadBehavior.clearAndReplace,
   });
 
   factory Settings.fromJson(Map<String, dynamic> json) {
@@ -21,11 +23,16 @@ class Settings {
         json[RpKeysConstants.doubleClickActionKey] ??
             DoubleClickAction.toggleWindowSize.name);
 
+    PlaylistLoadBehavior savedPlaylistLoadBehavior = PlaylistLoadBehavior.values.byName(
+        json[RpKeysConstants.playlistLoadBehaviorKey] ??
+            PlaylistLoadBehavior.clearAndReplace.name);
+
     return Settings(
       isSubtitleEnabled:
           json[RpKeysConstants.subtitleEnabledStorageKey] as bool? ?? false,
       playlistType: savedPlaylistType,
       doubleClickAction: savedDoubleClickAction,
+      playlistLoadBehavior: savedPlaylistLoadBehavior,
     );
   }
 
@@ -34,6 +41,7 @@ class Settings {
       RpKeysConstants.subtitleEnabledStorageKey: isSubtitleEnabled,
       RpKeysConstants.playlistTypeStorageKey: playlistType.name,
       RpKeysConstants.doubleClickActionKey: doubleClickAction.name,
+      RpKeysConstants.playlistLoadBehaviorKey: playlistLoadBehavior.name,
     };
   }
 

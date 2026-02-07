@@ -162,6 +162,46 @@ List<RpMenuItem> get defaultMenuData {
             );
           },
         ),
+
+        /// Playlist Load Behavior submenu
+        RpMenuItem(
+          text: "When Loading Files",
+          icon: Icons.playlist_add,
+          subMenuItems: [
+            RpMenuItem(
+              icon: SettingsController.to.settings.playlistLoadBehavior == 
+                    PlaylistLoadBehavior.clearAndReplace
+                  ? Icons.check
+                  : null,
+              text: "Clear and Replace Playlist",
+              onTap: () async {
+                await SettingsController.to.updatePlaylistLoadBehavior(
+                  PlaylistLoadBehavior.clearAndReplace,
+                );
+                RpSnackbar.success(
+                  title: 'Playlist Behavior Updated',
+                  message: 'New files will clear the playlist',
+                );
+              },
+            ),
+            RpMenuItem(
+              icon: SettingsController.to.settings.playlistLoadBehavior == 
+                    PlaylistLoadBehavior.appendToExisting
+                  ? Icons.check
+                  : null,
+              text: "Append to Existing Playlist",
+              onTap: () async {
+                await SettingsController.to.updatePlaylistLoadBehavior(
+                  PlaylistLoadBehavior.appendToExisting,
+                );
+                RpSnackbar.success(
+                  title: 'Playlist Behavior Updated',
+                  message: 'New files will be added to playlist',
+                );
+              },
+            ),
+          ],
+        ),
       ],
     ),
 

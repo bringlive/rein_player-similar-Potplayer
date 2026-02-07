@@ -153,6 +153,9 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Natural sorting for better file organization
 - **Shuffle playlist** - Randomize playlist order via keyboard shortcut (S) or context menu
 - **Delete & Skip** - Quickly delete current video permanently and skip to next
+- Configurable playlist load behavior:
+  - Clear and Replace: New files clear the playlist (default)
+  - Append to Existing: New files are added to current playlist
 
 ---
 
@@ -178,8 +181,10 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 
 - Custom keyboard bindings - reassign any shortcut to your preference
 - Playlist type configuration - choose between Default and PotPlayer-style behavior
+- Playlist load behavior - choose between clearing or appending when loading files
 - Double-click action - choose between window maximize/minimize or play/pause
 - Seek interval preferences - choose between adaptive (percentage) or fixed (seconds) seeking
+- Keyboard shortcuts toggle - enable/disable all shortcuts globally
 - Volume preferences - enhanced 0-200% volume range with persistent settings
 - Subtitle preferences - auto-enable/disable settings
 - All settings are automatically saved and restored between sessions

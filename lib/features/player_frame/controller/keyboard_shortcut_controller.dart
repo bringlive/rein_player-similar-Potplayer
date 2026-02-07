@@ -18,6 +18,11 @@ class KeyboardController extends GetxController {
 
   void handleKey(KeyEvent event) async {
     if (event is KeyDownEvent) {
+      // Check if shortcuts are enabled
+      if (!KeyboardPreferencesController.to.shortcutsEnabled.value) {
+        return; // Skip all shortcut processing
+      }
+
       final isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
       final isCtrlPressed = HardwareKeyboard.instance.isControlPressed;
       final currentKey = event.logicalKey;

@@ -27,6 +27,9 @@ class RpKeysConstants {
   /// double-click action
   static const String doubleClickActionKey = "doubleClickActionKey";
 
+  /// playlist load behavior
+  static const String playlistLoadBehaviorKey = "playlistLoadBehaviorKey";
+
   /// seek settings
   static const String seekSettingsKey = "seekSettingsKey";
   static const String seekModeKey = "seekModeKey";
@@ -37,6 +40,9 @@ class RpKeysConstants {
 
   /// keyboard bindings
   static const String keyboardBindingsKey = "keyboardBindingsKey";
+
+  /// keyboard shortcuts enabled
+  static const String keyboardShortcutsEnabledKey = "keyboardShortcutsEnabledKey";
 
   /// video playback positions
   static const String videoPositionsKey = "videoPositionsKey";

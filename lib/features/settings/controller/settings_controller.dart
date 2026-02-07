@@ -25,4 +25,10 @@ class SettingsController extends GetxController {
     await storage.saveData(RpKeysConstants.settingsKey, settings.toJson());
     update();
   }
+
+  Future<void> updatePlaylistLoadBehavior(PlaylistLoadBehavior behavior) async {
+    settings.playlistLoadBehavior = behavior;
+    await storage.saveData(RpKeysConstants.settingsKey, settings.toJson());
+    update();
+  }
 }

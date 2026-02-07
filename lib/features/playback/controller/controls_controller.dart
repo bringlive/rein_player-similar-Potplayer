@@ -13,6 +13,7 @@ import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/features/playlist/models/playlist_item.dart';
 import 'package:rein_player/features/settings/controller/seek_settings_controller.dart';
+import 'package:rein_player/features/settings/controller/settings_controller.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_sizes.dart';
 import 'package:rein_player/utils/constants/rp_text.dart';
@@ -240,7 +241,11 @@ class ControlsController extends GetxController {
       VideoOrAudioItem srcFile =
           VideoOrAudioItem(file.name, filePath, size: file.size);
       VideoAndControlController.to.loadVideoFromUrl(srcFile);
-      AlbumContentController.to.currentContent.clear();
+      final shouldClear = SettingsController.to.settings.playlistLoadBehavior == 
+                          PlaylistLoadBehavior.clearAndReplace;
+      if (shouldClear) {
+        AlbumContentController.to.currentContent.clear();
+      }
       AlbumContentController.to.addToCurrentPlaylistContent(
         PlaylistItem(name: file.name, location: filePath, isDirectory: false),
       );

@@ -13,6 +13,8 @@ import 'package:rein_player/features/player_frame/controller/window_actions_cont
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/playlist/models/playlist_item.dart';
+import 'package:rein_player/features/settings/controller/settings_controller.dart';
+import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_keys.dart';
 import 'package:rein_player/utils/device/rp_device_utils.dart';
 import 'package:rein_player/utils/helpers/media_helper.dart';
@@ -226,8 +228,10 @@ class VideoAndControlController extends GetxController {
           type: RpMediaHelper.getPlaylistItemType(filePath),
         );
 
+        final shouldClear = SettingsController.to.settings.playlistLoadBehavior == 
+                            PlaylistLoadBehavior.clearAndReplace;
         AlbumContentController.to
-            .addItemsToPlaylistContent([playlistItem], clearBefore: true);
+            .addItemsToPlaylistContent([playlistItem], clearBefore: shouldClear);
 
         await loadVideoFromUrl(media);
         WindowActionsController.to.maximizeWindow();

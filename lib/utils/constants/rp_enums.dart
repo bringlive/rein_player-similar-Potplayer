@@ -13,6 +13,11 @@ enum SeekMode {
   fixed,
 }
 
+enum PlaylistLoadBehavior {
+  clearAndReplace,
+  appendToExisting,
+}
+
 enum ActionContext {
   player,
   playlist
