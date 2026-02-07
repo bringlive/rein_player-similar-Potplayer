@@ -229,7 +229,7 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
     );
   }
 
-  Widget _buildSubtitle(String action) {
+  Widget? _buildSubtitle(String action) {
     const actionsToHoldShift = [
       'big_seek_backward',
       'big_seek_forward',
@@ -248,7 +248,7 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
         style: TextStyle(color: RpColors.black_500, fontSize: 11),
       );
     }
-    return const SizedBox.shrink();
+    return null;
   }
 
   void _startEditingKey(String action) {

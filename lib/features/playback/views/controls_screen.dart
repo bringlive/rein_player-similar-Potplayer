@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:rein_player/utils/constants/rp_app_icons.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/views/video_action_controls.dart';
+import 'package:rein_player/features/player_frame/controller/navigation_context_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
 
@@ -40,7 +41,12 @@ class RpControls extends StatelessWidget {
 
                 /// toggle playlist
                 GestureDetector(
-                  onTap: PlaylistController.to.togglePlaylistWindow,
+                  onTap: () {
+                    PlaylistController.to.togglePlaylistWindow();
+                    if (PlaylistController.to.isPlaylistWindowOpened.value) {
+                      NavigationContextController.to.switchToPlaylist();
+                    }
+                  },
                   child: Container(
                     height: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 12),

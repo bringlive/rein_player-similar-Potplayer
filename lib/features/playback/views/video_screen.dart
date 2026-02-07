@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/playback/controller/volume_controller.dart';
+import 'package:rein_player/features/player_frame/controller/navigation_context_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/settings/controller/menu_controller.dart';
 import 'package:rein_player/features/settings/controller/subtitle_styling_controller.dart';
@@ -37,6 +38,9 @@ class RpVideoScreen extends StatelessWidget {
                   children: [
                     /// video
                     GestureDetector(
+                      onTap: () {
+                        NavigationContextController.to.switchToPlayer();
+                      },
                       onDoubleTap: WindowActionsController.to.toggleWindowSize,
                       onTertiaryTapUp: (details) {
                         if (details.kind == PointerDeviceKind.mouse) {
