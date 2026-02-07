@@ -27,6 +27,14 @@ class RpKeysConstants {
   /// double-click action
   static const String doubleClickActionKey = "doubleClickActionKey";
 
+  /// seek settings
+  static const String seekSettingsKey = "seekSettingsKey";
+  static const String seekModeKey = "seekModeKey";
+  static const String regularSeekPercentageKey = "regularSeekPercentageKey";
+  static const String bigSeekPercentageKey = "bigSeekPercentageKey";
+  static const String regularSeekSecondsKey = "regularSeekSecondsKey";
+  static const String bigSeekSecondsKey = "bigSeekSecondsKey";
+
   /// keyboard bindings
   static const String keyboardBindingsKey = "keyboardBindingsKey";
 

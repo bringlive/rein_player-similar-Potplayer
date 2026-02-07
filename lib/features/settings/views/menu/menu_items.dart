@@ -16,6 +16,7 @@ import 'package:rein_player/features/settings/views/menu/menu_item.dart';
 import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
 import 'package:rein_player/features/settings/views/about_dialog.dart';
 import 'package:rein_player/features/settings/views/subtitle_settings_modal.dart';
+import 'package:rein_player/features/settings/views/seek_settings_modal.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_colors.dart';
 
@@ -106,6 +107,16 @@ List<RpMenuItem> get defaultMenuData {
               },
             ),
           ],
+        ),
+        RpMenuItem(
+          icon: Icons.fast_forward,
+          text: "Seek Intervals",
+          onTap: () {
+            final context = Get.context;
+            if (context != null) {
+              SeekSettingsModal.show(context);
+            }
+          },
         ),
       ],
     ),

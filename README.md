@@ -104,7 +104,10 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Playlist panel with folder highlighting for current video path
 - Right-click context menu with quick access to settings and features
 - Settings menu with customizable preferences
-- Adaptive seeking speed based on video length
+- Configurable seek intervals:
+  - Adaptive mode: Percentage-based seeking (1% and 5% default)
+  - Fixed mode: Fixed seconds seeking (5s and 30s default)
+  - Customize both regular and big seek values
 - Enhanced volume control (0-200%) with persistent settings - Because my PC speakers are not that loud 🤣
 - Integrate with GNOME to show as default video player if installed with the install script
 - Command-line interface support:
@@ -176,6 +179,7 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Custom keyboard bindings - reassign any shortcut to your preference
 - Playlist type configuration - choose between Default and PotPlayer-style behavior
 - Double-click action - choose between window maximize/minimize or play/pause
+- Seek interval preferences - choose between adaptive (percentage) or fixed (seconds) seeking
 - Volume preferences - enhanced 0-200% volume range with persistent settings
 - Subtitle preferences - auto-enable/disable settings
 - All settings are automatically saved and restored between sessions

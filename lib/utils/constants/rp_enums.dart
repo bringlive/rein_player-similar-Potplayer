@@ -8,6 +8,11 @@ enum DoubleClickAction {
   playPause,
 }
 
+enum SeekMode {
+  adaptive,
+  fixed,
+}
+
 enum ActionContext {
   player,
   playlist

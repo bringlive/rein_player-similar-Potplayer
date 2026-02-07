@@ -14,6 +14,7 @@ import 'package:rein_player/features/player_frame/controller/fullscreen_overlay_
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/settings/controller/menu_controller.dart';
 import 'package:rein_player/features/settings/controller/settings_controller.dart';
+import 'package:rein_player/features/settings/controller/seek_settings_controller.dart';
 import 'package:rein_player/features/settings/controller/keyboard_preferences_controller.dart';
 import 'package:rein_player/features/settings/controller/subtitle_styling_controller.dart';
 
@@ -43,6 +44,7 @@ class GeneralBindings extends Bindings {
     Get.put(AlbumContentController());
     Get.put(MainMenuController());
     Get.lazyPut(() => SettingsController());
+    Get.lazyPut(() => SeekSettingsController());
     Get.lazyPut(() => PlaylistTypeController());
   }
 }
