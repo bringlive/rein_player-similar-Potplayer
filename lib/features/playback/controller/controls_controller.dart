@@ -12,6 +12,9 @@ import 'package:rein_player/features/playlist/controller/album_content_controlle
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/features/playlist/models/playlist_item.dart';
+import 'package:rein_player/features/settings/controller/seek_settings_controller.dart';
+import 'package:rein_player/features/settings/controller/settings_controller.dart';
+import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_sizes.dart';
 import 'package:rein_player/utils/constants/rp_text.dart';
 import 'package:rein_player/utils/helpers/duration_helper.dart';
@@ -74,16 +77,30 @@ class ControlsController extends GetxController {
     return RpDurationHelper.formatDuration(videoPosition.value!);
   }
 
-  Duration _calculateSeekTime({required double percentage}) {
-    final duration = videoDuration.value;
-    if (duration == null) {
-      return const Duration(seconds: 10);
+  Duration _calculateSeekTime({required bool isBigSeek}) {
+    final seekSettings = SeekSettingsController.to.settings.value;
+    
+    if (seekSettings.mode == SeekMode.adaptive) {
+      // Percentage-based (adaptive)
+      final duration = videoDuration.value;
+      if (duration == null) {
+        return const Duration(seconds: 10);
+      }
+      final percentage = isBigSeek 
+          ? seekSettings.bigSeekPercentage 
+          : seekSettings.regularSeekPercentage;
+      return Duration(seconds: (duration.inSeconds * percentage).round());
+    } else {
+      // Fixed seconds
+      final seconds = isBigSeek 
+          ? seekSettings.bigSeekSeconds 
+          : seekSettings.regularSeekSeconds;
+      return Duration(seconds: seconds);
     }
-    return Duration(seconds: (duration.inSeconds * percentage).round());
   }
 
   Future<void> seekBackward() async {
-    final seekTime = _calculateSeekTime(percentage: 0.01);
+    final seekTime = _calculateSeekTime(isBigSeek: false);
     final position = videoPosition.value?.inSeconds ?? 0;
     final seekTo = position - seekTime.inSeconds;
     if (seekTo < 0) return;
@@ -91,14 +108,14 @@ class ControlsController extends GetxController {
   }
 
   Future<void> seekForward() async {
-    final seekTime = _calculateSeekTime(percentage: 0.01);
+    final seekTime = _calculateSeekTime(isBigSeek: false);
     final position = videoPosition.value?.inSeconds ?? 0;
     final seekTo = position + seekTime.inSeconds;
     await player.seek(Duration(seconds: seekTo));
   }
 
   Future<void> bigSeekBackward() async {
-    final seekTime = _calculateSeekTime(percentage: 0.05);
+    final seekTime = _calculateSeekTime(isBigSeek: true);
     final position = videoPosition.value?.inSeconds ?? 0;
     final seekTo = position - seekTime.inSeconds;
     if (seekTo < 0) return;
@@ -106,7 +123,7 @@ class ControlsController extends GetxController {
   }
 
   Future<void> bigSeekForward() async {
-    final seekTime = _calculateSeekTime(percentage: 0.05);
+    final seekTime = _calculateSeekTime(isBigSeek: true);
     final position = videoPosition.value?.inSeconds ?? 0;
     final seekTo = position + seekTime.inSeconds;
     await player.seek(Duration(seconds: seekTo));
@@ -224,7 +241,11 @@ class ControlsController extends GetxController {
       VideoOrAudioItem srcFile =
           VideoOrAudioItem(file.name, filePath, size: file.size);
       VideoAndControlController.to.loadVideoFromUrl(srcFile);
-      AlbumContentController.to.currentContent.clear();
+      final shouldClear = SettingsController.to.settings.playlistLoadBehavior == 
+                          PlaylistLoadBehavior.clearAndReplace;
+      if (shouldClear) {
+        AlbumContentController.to.currentContent.clear();
+      }
       AlbumContentController.to.addToCurrentPlaylistContent(
         PlaylistItem(name: file.name, location: filePath, isDirectory: false),
       );

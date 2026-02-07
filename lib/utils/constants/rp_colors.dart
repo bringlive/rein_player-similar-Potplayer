@@ -5,6 +5,9 @@ class RpColors {
   
   static const black = Color(0xFF000000);
   static const white = Color(0xFFFFFFFF);
+  static const red = Color(0xFFF44336);
+  static const orange = Color(0xFFFF9800);
+  static const green = Color(0xFF4CAF50); 
 
   static const accent = Color(0xFFEAD300);
 

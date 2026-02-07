@@ -8,6 +8,7 @@ import 'package:rein_player/features/playback/controller/video_and_controls_cont
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
+import 'package:rein_player/features/settings/controller/settings_controller.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
 import 'package:rein_player/utils/constants/rp_sizes.dart';
 import 'package:rein_player/utils/extensions/media_extensions.dart';
@@ -59,8 +60,10 @@ class WindowController extends GetxController with WindowListener {
         }
       }
 
+      final shouldClear = SettingsController.to.settings.playlistLoadBehavior == 
+                          PlaylistLoadBehavior.clearAndReplace;
       AlbumContentController.to
-          .addItemsToPlaylistContent(mediaFiles, clearBefore: true);
+          .addItemsToPlaylistContent(mediaFiles, clearBefore: shouldClear);
 
       /// load the first video
       final firstVideo =

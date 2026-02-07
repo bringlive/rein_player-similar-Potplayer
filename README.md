@@ -70,27 +70,38 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Supports all FFmpeg-compatible video formats ([see full list](https://www.ffmpeg.org/general.html#Video-Codecs))
 - Customizable keyboard shortcuts with visual configuration interface:
 
-| Default Key         | Action                  | Customizable |
-| ------------------- | ----------------------- | ------------ |
-| Spacebar            | Pause / Play            | ✅           |
-| m                   | Mute / Unmute           | ✅           |
-| Ctrl + h            | Show / Hide Subtitles   | ✅           |
-| Esc                 | Exit Fullscreen         | ✅           |
-| Enter               | Enter Fullscreen        | ✅           |
-| Right Arrow         | Seek Forward            | ✅           |
-| Left Arrow          | Seek Backward           | ✅           |
-| Shift + Right Arrow | Big Seek Forward        | ✅           |
-| Shift + Left Arrow  | Big Seek Backward       | ✅           |
-| Up Arrow            | Volume Up               | ✅           |
-| Down Arrow          | Volume Down             | ✅           |
-| Ctrl + b            | Toggle Playlist Window  | ✅           |
-| Ctrl + d            | Toggle Developer Log    | ✅           |
-| x                   | Decrease Playback Speed | ✅           |
-| c                   | Increase Playback Speed | ✅           |
-| Page Up             | Goto Previous Video     | ✅           |
-| Page Down           | Goto Next Video         | ✅           |
+| Default Key         | Action                        | Customizable |
+| ------------------- | ----------------------------- | ------------ |
+| Spacebar            | Pause / Play                  | ✅           |
+| m                   | Mute / Unmute                 | ✅           |
+| Ctrl + h            | Show / Hide Subtitles         | ✅           |
+| Esc                 | Exit Fullscreen               | ✅           |
+| Enter               | Enter Fullscreen              | ✅           |
+| Right Arrow         | Seek Forward                  | ✅           |
+| Left Arrow          | Seek Backward                 | ✅           |
+| Shift + Right Arrow | Big Seek Forward              | ✅           |
+| Shift + Left Arrow  | Big Seek Backward             | ✅           |
+| Up Arrow            | Volume Up                     | ✅           |
+| Down Arrow          | Volume Down                   | ✅           |
+| Ctrl + b            | Add Bookmark                  | ✅           |
+| b                   | Jump to Next Bookmark         | ✅           |
+| Shift + b           | Jump to Previous Bookmark     | ✅           |
+| Ctrl + Shift + b    | Toggle Bookmark List          | ✅           |
+| Ctrl + p            | Toggle Playlist               | ✅           |
+| Ctrl + l            | Add A-B Loop Segment          | ✅           |
+| l                   | Toggle A-B Loop Overlay       | ✅           |
+| Ctrl + Shift + l    | Start/Stop A-B Loop Playback  | ✅           |
+| [                   | Jump to Previous A-B Segment  | ✅           |
+| ]                   | Jump to Next A-B Segment      | ✅           |
+| Ctrl + Shift + e    | Export A-B Loops to PBF File  | ✅           |
+| Ctrl + k            | Toggle Keyboard Bindings      | ✅           |
+| Ctrl + d            | Toggle Developer Log          | ✅           |
+| x                   | Decrease Playback Speed       | ✅           |
+| c                   | Increase Playback Speed       | ✅           |
+| Page Up             | Goto Previous Video           | ✅           |
+| Page Down           | Goto Next Video               | ✅           |
 | Shift + Delete      | Delete Video and Skip to Next | ✅           |
-| s                   | Shuffle Playlist        | ✅           |
+| s                   | Shuffle Playlist              | ✅           |
 
 - Enhanced fullscreen mode with edge-hover menu display and auto-hide functionality
 - Mouse wheel volume control - scroll over video to adjust volume
@@ -100,7 +111,10 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Playlist panel with folder highlighting for current video path
 - Right-click context menu with quick access to settings and features
 - Settings menu with customizable preferences
-- Adaptive seeking speed based on video length
+- Configurable seek intervals:
+  - Adaptive mode: Percentage-based seeking (1% and 5% default)
+  - Fixed mode: Fixed seconds seeking (5s and 30s default)
+  - Customize both regular and big seek values
 - Enhanced volume control (0-200%) with persistent settings - Because my PC speakers are not that loud 🤣
 - Integrate with GNOME to show as default video player if installed with the install script
 - Command-line interface support:
@@ -108,6 +122,9 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
   - `reinplayer --help` or `-h`: Show help and usage information
   - `reinplayer <file>`: Open and play a video file directly
 - About dialog accessible from right-click menu showing version, description, and GitHub link
+- Configurable double-click behavior:
+  - Maximize/Minimize window (default)
+  - Play/Pause video (PotPlayer style)
 
 ---
 
@@ -143,6 +160,61 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Natural sorting for better file organization
 - **Shuffle playlist** - Randomize playlist order via keyboard shortcut (S) or context menu
 - **Delete & Skip** - Quickly delete current video permanently and skip to next
+- Configurable playlist load behavior:
+  - Clear and Replace: New files clear the playlist (default)
+  - Append to Existing: New files are added to current playlist
+
+---
+
+### 🔖 Bookmarks
+
+- Save multiple timestamps per video with custom names
+- Quick navigation between bookmarks using keyboard shortcuts
+- Persistent bookmarks that survive app restarts
+- Visual bookmark manager overlay
+- Bookmark actions available via context menu and keyboard:
+  - Add bookmark at current position (Ctrl+B)
+  - Jump to next bookmark (B)
+  - Jump to previous bookmark (Shift+B)
+  - Toggle bookmark list overlay (Ctrl+Shift+B)
+- Edit bookmark names inline
+- Delete individual or clear all bookmarks
+- Automatic sorting by timestamp
+- Wrap-around navigation (loops to first/last)
+
+---
+
+### 🔁 A-B Loop Segments (PBF Support)
+
+**Advanced practice tool with full PotPlayer compatibility!**
+
+- **PotPlayer Bookmark File (.pbf) support**:
+  - Auto-load .pbf files when opening videos
+  - Import existing PotPlayer bookmark files
+  - Export segments back to .pbf format (fully compatible)
+- **Create multiple A-B loop segments per video**:
+  - Set start time and duration for each segment
+  - Configure loop count (how many times to repeat)
+  - Optional repeat delay (pause between loops)
+  - Add titles/labels to organize segments
+- **Intelligent playback engine**:
+  - Automatically loops each segment the specified number of times
+  - Moves to next segment after completing all loops
+  - Wraps around to first segment when sequence completes
+  - Pause on last frame between loops (configurable delay)
+- **Full CRUD operations**:
+  - Create segments with configuration modal
+  - Edit existing segments (all parameters)
+  - Delete individual or clear all segments
+  - Visual segment manager overlay
+- **Perfect for**:
+  - Language learning (loop dialogue sections)
+  - Music practice (repeat difficult passages)
+  - Dance/choreography (master specific moves)
+  - Sports analysis (study techniques frame-by-frame)
+  - Any scenario requiring repeated playback
+- **Coexists with simple bookmarks** - use both features independently
+- All segments persist between sessions and sync with storage
 
 ---
 
@@ -150,6 +222,10 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 
 - Custom keyboard bindings - reassign any shortcut to your preference
 - Playlist type configuration - choose between Default and PotPlayer-style behavior
+- Playlist load behavior - choose between clearing or appending when loading files
+- Double-click action - choose between window maximize/minimize or play/pause
+- Seek interval preferences - choose between adaptive (percentage) or fixed (seconds) seeking
+- Keyboard shortcuts toggle - enable/disable all shortcuts globally
 - Volume preferences - enhanced 0-200% volume range with persistent settings
 - Subtitle preferences - auto-enable/disable settings
 - All settings are automatically saved and restored between sessions

@@ -1,9 +1,5 @@
 import 'package:get/get.dart';
-
-enum ActionContext {
-  player,
-  playlist
-}
+import 'package:rein_player/utils/constants/rp_enums.dart';
 
 class NavigationContextController extends GetxController {
   static NavigationContextController get to => Get.find();

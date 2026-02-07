@@ -2,6 +2,8 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/developer/controller/developer_log_controller.dart';
+import 'package:rein_player/features/playback/controller/ab_loop_controller.dart';
+import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playback_speed_controller.dart';
 import 'package:rein_player/features/playback/controller/subtitle_controller.dart';
@@ -11,12 +13,19 @@ import 'package:rein_player/features/player_frame/controller/window_actions_cont
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/features/settings/controller/keyboard_preferences_controller.dart';
+import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
+import 'package:rein_player/utils/constants/rp_enums.dart';
 
 class KeyboardController extends GetxController {
   static KeyboardController get to => Get.find();
 
   void handleKey(KeyEvent event) async {
     if (event is KeyDownEvent) {
+      // Check if shortcuts are enabled
+      if (!KeyboardPreferencesController.to.shortcutsEnabled.value) {
+        return; // Skip all shortcut processing
+      }
+
       final isShiftPressed = HardwareKeyboard.instance.isShiftPressed;
       final isCtrlPressed = HardwareKeyboard.instance.isControlPressed;
       final currentKey = event.logicalKey;
@@ -132,6 +141,75 @@ class KeyboardController extends GetxController {
         return;
       }
 
+      // Bookmark operations (B key with various modifiers)
+      if (currentKey == keyBindings['add_bookmark']) {
+        // Ctrl+Shift+B: Toggle bookmark list
+        if (isCtrlPressed && isShiftPressed) {
+          BookmarkController.to.toggleBookmarkOverlay();
+          return;
+        }
+        // Ctrl+B: Add bookmark (but not Shift, to avoid conflict with toggle playlist)
+        if (isCtrlPressed && !isShiftPressed) {
+          await BookmarkController.to.addBookmark();
+          return;
+        }
+        // Shift+B: Previous bookmark
+        if (isShiftPressed && !isCtrlPressed) {
+          await BookmarkController.to.jumpToPreviousBookmark();
+          return;
+        }
+        // B alone: Next bookmark
+        if (!isCtrlPressed && !isShiftPressed) {
+          await BookmarkController.to.jumpToNextBookmark();
+          return;
+        }
+      }
+
+      // A-B Loop operations (L key with various modifiers)
+      if (currentKey == keyBindings['add_ab_loop_segment'] ||
+          currentKey == keyBindings['toggle_ab_loop_overlay'] ||
+          currentKey == keyBindings['toggle_ab_loop_playback']) {
+        // Ctrl+Shift+L: Toggle A-B loop playback
+        if (isCtrlPressed && isShiftPressed &&
+            currentKey == keyBindings['toggle_ab_loop_playback']) {
+          ABLoopController.to.toggleABLoopPlayback();
+          return;
+        }
+        // Ctrl+L: Add segment at current position
+        if (isCtrlPressed && !isShiftPressed &&
+            currentKey == keyBindings['add_ab_loop_segment']) {
+          ABLoopController.to.addSegmentAtCurrentPosition();
+          return;
+        }
+        // L alone: Toggle A-B loop overlay
+        if (!isCtrlPressed && !isShiftPressed &&
+            currentKey == keyBindings['toggle_ab_loop_overlay']) {
+          ABLoopController.to.toggleOverlay();
+          return;
+        }
+      }
+
+      // A-B Loop segment navigation
+      if (currentKey == keyBindings['previous_ab_loop_segment']) {
+        // [: Previous segment
+        await ABLoopController.to.jumpToPreviousSegment();
+        return;
+      }
+
+      if (currentKey == keyBindings['next_ab_loop_segment']) {
+        // ]: Next segment
+        await ABLoopController.to.jumpToNextSegment();
+        return;
+      }
+
+      // Export A-B loops to PBF
+      if (currentKey == keyBindings['export_ab_loops'] &&
+          isCtrlPressed &&
+          isShiftPressed) {
+        await ABLoopController.to.exportToPBF();
+        return;
+      }
+
       // Toggle playlist (with Ctrl modifier)
       if (currentKey == keyBindings['toggle_playlist'] && isCtrlPressed) {
         PlaylistController.to.togglePlaylistWindow();
@@ -144,6 +222,12 @@ class KeyboardController extends GetxController {
       // Toggle developer log (with Ctrl modifier)
       if (currentKey == keyBindings['toggle_developer_log'] && isCtrlPressed) {
         DeveloperLogController.to.toggleVisibility();
+        return;
+      }
+
+      // Toggle keyboard bindings (with Ctrl modifier)
+      if (currentKey == keyBindings['toggle_keyboard_bindings'] && isCtrlPressed) {
+        Get.dialog(const KeyboardBindingsModal());
         return;
       }
 
