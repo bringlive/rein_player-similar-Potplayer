@@ -11,6 +11,7 @@ import 'package:rein_player/features/playback/controller/subtitle_controller.dar
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
+import 'package:rein_player/features/settings/controller/settings_controller.dart';
 import 'package:rein_player/features/settings/views/menu/menu_item.dart';
 import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
 import 'package:rein_player/features/settings/views/about_dialog.dart';
@@ -75,6 +76,36 @@ List<RpMenuItem> get defaultMenuData {
           onTap: () {
             Get.dialog(const KeyboardBindingsModal());
           },
+        ),
+        RpMenuItem(
+          text: "Double-Click Action",
+          icon: Icons.mouse,
+          subMenuItems: [
+            RpMenuItem(
+              icon: SettingsController.to.settings.doubleClickAction == 
+                    DoubleClickAction.toggleWindowSize
+                  ? Icons.check
+                  : null,
+              text: "Maximize/Minimize Window",
+              onTap: () async {
+                await SettingsController.to.updateDoubleClickAction(
+                  DoubleClickAction.toggleWindowSize,
+                );
+              },
+            ),
+            RpMenuItem(
+              icon: SettingsController.to.settings.doubleClickAction == 
+                    DoubleClickAction.playPause
+                  ? Icons.check
+                  : null,
+              text: "Play/Pause Video",
+              onTap: () async {
+                await SettingsController.to.updateDoubleClickAction(
+                  DoubleClickAction.playPause,
+                );
+              },
+            ),
+          ],
         ),
       ],
     ),

@@ -112,6 +112,9 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
   - `reinplayer --help` or `-h`: Show help and usage information
   - `reinplayer <file>`: Open and play a video file directly
 - About dialog accessible from right-click menu showing version, description, and GitHub link
+- Configurable double-click behavior:
+  - Maximize/Minimize window (default)
+  - Play/Pause video (PotPlayer style)
 
 ---
 
@@ -172,6 +175,7 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 
 - Custom keyboard bindings - reassign any shortcut to your preference
 - Playlist type configuration - choose between Default and PotPlayer-style behavior
+- Double-click action - choose between window maximize/minimize or play/pause
 - Volume preferences - enhanced 0-200% volume range with persistent settings
 - Subtitle preferences - auto-enable/disable settings
 - All settings are automatically saved and restored between sessions

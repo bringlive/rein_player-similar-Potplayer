@@ -24,6 +24,9 @@ class RpKeysConstants {
   /// playlist
   static const String playlistTypeStorageKey = "playlistTypeStorageKey";
 
+  /// double-click action
+  static const String doubleClickActionKey = "doubleClickActionKey";
+
   /// keyboard bindings
   static const String keyboardBindingsKey = "keyboardBindingsKey";
 
