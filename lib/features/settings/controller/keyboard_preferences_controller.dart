@@ -27,12 +27,17 @@ class KeyboardPreferencesController extends GetxController {
     'toggle_subtitle': LogicalKeyboardKey.keyH,
     'toggle_playlist': LogicalKeyboardKey.keyB, // With Ctrl
     'toggle_developer_log': LogicalKeyboardKey.keyD, // With Ctrl
+    'toggle_keyboard_bindings': LogicalKeyboardKey.keyK, // With Ctrl
     'decrease_speed': LogicalKeyboardKey.keyX,
     'increase_speed': LogicalKeyboardKey.keyC,
     'next_track': LogicalKeyboardKey.pageDown,
     'previous_track': LogicalKeyboardKey.pageUp,
     'delete_and_skip': LogicalKeyboardKey.delete, // With Shift
     'shuffle_playlist': LogicalKeyboardKey.keyS,
+    'add_bookmark': LogicalKeyboardKey.keyB, // With Ctrl
+    'next_bookmark': LogicalKeyboardKey.keyB,
+    'previous_bookmark': LogicalKeyboardKey.keyB, // With Shift
+    'toggle_bookmark_list': LogicalKeyboardKey.keyB, // With Ctrl+Shift
   };
 
   // Action descriptions for UI
@@ -51,12 +56,17 @@ class KeyboardPreferencesController extends GetxController {
     'exit_fullscreen': 'Exit Fullscreen',
     'toggle_playlist': 'Toggle Playlist',
     'toggle_developer_log': 'Toggle Developer Log',
+    'toggle_keyboard_bindings': 'Toggle Keyboard Bindings',
     'decrease_speed': 'Decrease Playback Speed',
     'increase_speed': 'Increase Playback Speed',
     'next_track': 'Next Track',
     'previous_track': 'Previous Track',
     'delete_and_skip': 'Delete playlist Item and Skip to Next',
     'shuffle_playlist': 'Shuffle Playlist',
+    'add_bookmark': 'Add Bookmark',
+    'next_bookmark': 'Jump to Next Bookmark',
+    'previous_bookmark': 'Jump to Previous Bookmark',
+    'toggle_bookmark_list': 'Toggle Bookmark List',
   };
 
   @override

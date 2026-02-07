@@ -234,10 +234,24 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
       'big_seek_backward',
       'big_seek_forward',
       'delete_and_skip',
+      'previous_bookmark',
     ];
-    const actionsToHoldCtrl = ['toggle_playlist', 'toggle_developer_log'];
+    const actionsToHoldCtrl = [
+      'toggle_playlist',
+      'toggle_developer_log',
+      'toggle_keyboard_bindings',
+      'add_bookmark',
+    ];
+    const actionsToHoldCtrlShift = [
+      'toggle_bookmark_list',
+    ];
 
-    if (actionsToHoldShift.contains(action)) {
+    if (actionsToHoldCtrlShift.contains(action)) {
+      return const Text(
+        'Hold Ctrl + Shift + key',
+        style: TextStyle(color: RpColors.black_500, fontSize: 11),
+      );
+    } else if (actionsToHoldShift.contains(action)) {
       return const Text(
         'Hold Shift + key',
         style: TextStyle(color: RpColors.black_500, fontSize: 11),

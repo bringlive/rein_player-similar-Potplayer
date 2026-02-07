@@ -70,27 +70,31 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Supports all FFmpeg-compatible video formats ([see full list](https://www.ffmpeg.org/general.html#Video-Codecs))
 - Customizable keyboard shortcuts with visual configuration interface:
 
-| Default Key         | Action                  | Customizable |
-| ------------------- | ----------------------- | ------------ |
-| Spacebar            | Pause / Play            | ✅           |
-| m                   | Mute / Unmute           | ✅           |
-| Ctrl + h            | Show / Hide Subtitles   | ✅           |
-| Esc                 | Exit Fullscreen         | ✅           |
-| Enter               | Enter Fullscreen        | ✅           |
-| Right Arrow         | Seek Forward            | ✅           |
-| Left Arrow          | Seek Backward           | ✅           |
-| Shift + Right Arrow | Big Seek Forward        | ✅           |
-| Shift + Left Arrow  | Big Seek Backward       | ✅           |
-| Up Arrow            | Volume Up               | ✅           |
-| Down Arrow          | Volume Down             | ✅           |
-| Ctrl + b            | Toggle Playlist Window  | ✅           |
-| Ctrl + d            | Toggle Developer Log    | ✅           |
-| x                   | Decrease Playback Speed | ✅           |
-| c                   | Increase Playback Speed | ✅           |
-| Page Up             | Goto Previous Video     | ✅           |
-| Page Down           | Goto Next Video         | ✅           |
+| Default Key         | Action                        | Customizable |
+| ------------------- | ----------------------------- | ------------ |
+| Spacebar            | Pause / Play                  | ✅           |
+| m                   | Mute / Unmute                 | ✅           |
+| Ctrl + h            | Show / Hide Subtitles         | ✅           |
+| Esc                 | Exit Fullscreen               | ✅           |
+| Enter               | Enter Fullscreen              | ✅           |
+| Right Arrow         | Seek Forward                  | ✅           |
+| Left Arrow          | Seek Backward                 | ✅           |
+| Shift + Right Arrow | Big Seek Forward              | ✅           |
+| Shift + Left Arrow  | Big Seek Backward             | ✅           |
+| Up Arrow            | Volume Up                     | ✅           |
+| Down Arrow          | Volume Down                   | ✅           |
+| Ctrl + b            | Add Bookmark                  | ✅           |
+| b                   | Jump to Next Bookmark         | ✅           |
+| Shift + b           | Jump to Previous Bookmark     | ✅           |
+| Ctrl + Shift + b    | Toggle Bookmark List          | ✅           |
+| Ctrl + k            | Toggle Keyboard Bindings      | ✅           |
+| Ctrl + d            | Toggle Developer Log          | ✅           |
+| x                   | Decrease Playback Speed       | ✅           |
+| c                   | Increase Playback Speed       | ✅           |
+| Page Up             | Goto Previous Video           | ✅           |
+| Page Down           | Goto Next Video               | ✅           |
 | Shift + Delete      | Delete Video and Skip to Next | ✅           |
-| s                   | Shuffle Playlist        | ✅           |
+| s                   | Shuffle Playlist              | ✅           |
 
 - Enhanced fullscreen mode with edge-hover menu display and auto-hide functionality
 - Mouse wheel volume control - scroll over video to adjust volume
@@ -143,6 +147,24 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Natural sorting for better file organization
 - **Shuffle playlist** - Randomize playlist order via keyboard shortcut (S) or context menu
 - **Delete & Skip** - Quickly delete current video permanently and skip to next
+
+---
+
+### 🔖 Bookmarks
+
+- Save multiple timestamps per video with custom names
+- Quick navigation between bookmarks using keyboard shortcuts
+- Persistent bookmarks that survive app restarts
+- Visual bookmark manager overlay
+- Bookmark actions available via context menu and keyboard:
+  - Add bookmark at current position (Ctrl+B)
+  - Jump to next bookmark (B)
+  - Jump to previous bookmark (Shift+B)
+  - Toggle bookmark list overlay (Ctrl+Shift+B)
+- Edit bookmark names inline
+- Delete individual or clear all bookmarks
+- Automatic sorting by timestamp
+- Wrap-around navigation (loops to first/last)
 
 ---
 

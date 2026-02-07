@@ -29,4 +29,7 @@ class RpKeysConstants {
 
   /// video playback positions
   static const String videoPositionsKey = "videoPositionsKey";
+
+  /// video bookmarks
+  static const String videoBookmarksKey = "videoBookmarksKey";
 }

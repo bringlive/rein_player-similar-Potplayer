@@ -4,9 +4,11 @@ import 'package:media_kit/media_kit.dart';
 import 'package:get/get.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/audio_track_controller.dart';
+import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playlist_type_controller.dart';
 import 'package:rein_player/features/playback/controller/subtitle_controller.dart';
+import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
 import 'package:rein_player/features/player_frame/controller/window_actions_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/settings/views/menu/menu_item.dart';
@@ -116,6 +118,86 @@ List<RpMenuItem> get defaultMenuData {
               title: 'Playlist Shuffled',
               message: 'Playlist order has been randomized',
             );
+          },
+        ),
+      ],
+    ),
+
+    /// Bookmarks
+    RpMenuItem(
+      text: "Bookmarks",
+      icon: Icons.bookmark,
+      subMenuItems: [
+        RpMenuItem(
+          icon: Icons.bookmark_add,
+          text: "Add Bookmark",
+          onTap: () async {
+            await BookmarkController.to.addBookmark();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.bookmark_border,
+          text: "Show Bookmarks",
+          onTap: () {
+            BookmarkController.to.toggleBookmarkOverlay();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.skip_next,
+          text: "Next Bookmark",
+          onTap: () async {
+            await BookmarkController.to.jumpToNextBookmark();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.skip_previous,
+          text: "Previous Bookmark",
+          onTap: () async {
+            await BookmarkController.to.jumpToPreviousBookmark();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.clear_all,
+          text: "Clear All Bookmarks",
+          onTap: () {
+            final video = VideoAndControlController.to.currentVideo.value;
+            if (video != null) {
+              // Show confirmation dialog before clearing
+              Get.dialog(
+                Builder(
+                  builder: (context) => AlertDialog(
+                    backgroundColor: RpColors.gray_900,
+                    title: const Text(
+                      'Clear All Bookmarks?',
+                      style: TextStyle(color: RpColors.white),
+                    ),
+                    content: const Text(
+                      'This will remove all bookmarks for this video. This action cannot be undone.',
+                      style: TextStyle(color: RpColors.white_300),
+                    ),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.of(context).pop(),
+                        child: const Text('Cancel'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          BookmarkController.to
+                              .clearBookmarksForVideo(video.location);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Clear All',
+                          style: TextStyle(color: RpColors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            } else {
+              RpSnackbar.warning(message: 'No video is currently playing');
+            }
           },
         ),
       ],

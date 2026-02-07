@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/developer/controller/developer_log_controller.dart';
+import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playback_speed_controller.dart';
 import 'package:rein_player/features/playback/controller/subtitle_controller.dart';
@@ -10,6 +11,7 @@ import 'package:rein_player/features/player_frame/controller/window_actions_cont
 import 'package:rein_player/features/playlist/controller/album_content_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/features/settings/controller/keyboard_preferences_controller.dart';
+import 'package:rein_player/features/settings/views/keyboard_bindings_modal.dart';
 
 class KeyboardController extends GetxController {
   static KeyboardController get to => Get.find();
@@ -103,6 +105,30 @@ class KeyboardController extends GetxController {
         return;
       }
 
+      // Bookmark operations (B key with various modifiers)
+      if (currentKey == keyBindings['add_bookmark']) {
+        // Ctrl+Shift+B: Toggle bookmark list
+        if (isCtrlPressed && isShiftPressed) {
+          BookmarkController.to.toggleBookmarkOverlay();
+          return;
+        }
+        // Ctrl+B: Add bookmark (but not Shift, to avoid conflict with toggle playlist)
+        if (isCtrlPressed && !isShiftPressed) {
+          await BookmarkController.to.addBookmark();
+          return;
+        }
+        // Shift+B: Previous bookmark
+        if (isShiftPressed && !isCtrlPressed) {
+          await BookmarkController.to.jumpToPreviousBookmark();
+          return;
+        }
+        // B alone: Next bookmark
+        if (!isCtrlPressed && !isShiftPressed) {
+          await BookmarkController.to.jumpToNextBookmark();
+          return;
+        }
+      }
+
       // Toggle playlist (with Ctrl modifier)
       if (currentKey == keyBindings['toggle_playlist'] && isCtrlPressed) {
         PlaylistController.to.togglePlaylistWindow();
@@ -112,6 +138,12 @@ class KeyboardController extends GetxController {
       // Toggle developer log (with Ctrl modifier)
       if (currentKey == keyBindings['toggle_developer_log'] && isCtrlPressed) {
         DeveloperLogController.to.toggleVisibility();
+        return;
+      }
+
+      // Toggle keyboard bindings (with Ctrl modifier)
+      if (currentKey == keyBindings['toggle_keyboard_bindings'] && isCtrlPressed) {
+        Get.dialog(const KeyboardBindingsModal());
         return;
       }
 

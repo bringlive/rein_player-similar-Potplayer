@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:rein_player/features/developer/controller/developer_log_controller.dart';
+import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/subtitle_controller.dart';
 import 'package:rein_player/features/playback/controller/volume_controller.dart';
 import 'package:rein_player/features/playback/models/video_audio_item.dart';
@@ -52,9 +53,10 @@ class VideoAndControlController extends GetxController {
   // Load saved position for a video
   int? _getSavedPosition(String videoPath) {
     try {
-      final positions = storage.readData<Map>(RpKeysConstants.videoPositionsKey);
+      final positions =
+          storage.readData<Map>(RpKeysConstants.videoPositionsKey);
       if (positions == null) return null;
-      
+
       final position = positions[videoPath];
       return position != null ? position['position'] as int : null;
     } catch (e) {
@@ -67,23 +69,24 @@ class VideoAndControlController extends GetxController {
     try {
       final video = currentVideo.value;
       final position = ControlsController.to.videoPosition.value;
-      
+
       if (video == null || position == null) return;
       // Don't save if <5 seconds
       if (position.inSeconds < 5) return;
-      
+
       final duration = ControlsController.to.videoDuration.value;
       if (duration != null && position.inSeconds > duration.inSeconds - 10) {
         // Don't save if within 10 seconds of end (video completed)
         return;
       }
-      
-      final positions = storage.readData<Map>(RpKeysConstants.videoPositionsKey) ?? {};
+
+      final positions =
+          storage.readData<Map>(RpKeysConstants.videoPositionsKey) ?? {};
       positions[video.location] = {
         'position': position.inSeconds,
         'lastWatched': DateTime.now().toIso8601String(),
       };
-      
+
       await storage.saveData(RpKeysConstants.videoPositionsKey, positions);
     } catch (e) {
       // do nothing
@@ -110,11 +113,14 @@ class VideoAndControlController extends GetxController {
       {bool play = true}) async {
     // Save position of previous video before switching
     await _saveCurrentPosition();
-    
+
     // if (currentVideo.value?.location == media.location) return;
     currentVideoUrl.value = media.location;
     currentVideo.value = media;
     ControlsController.to.resetVideoProgress();
+
+    // Load bookmarks for new video
+    BookmarkController.to.loadBookmarksForVideo(media.location);
 
     VolumeController.to.currentVolume.value =
         VolumeController.to.currentVolume.value == 0
@@ -150,7 +156,7 @@ class VideoAndControlController extends GetxController {
     } else {
       await videoPlayerController.player.pause();
     }
-    
+
     // Start saving position periodically
     _startPositionSaver();
   }
@@ -176,15 +182,16 @@ class VideoAndControlController extends GetxController {
     player.stream.completed.listen((isCompleted) async {
       if (isCompleted && !isVideoCompleted.value) {
         isVideoCompleted.value = true;
-        
+
         // Clear saved position when video completes
         final video = currentVideo.value;
         if (video != null) {
-          final positions = storage.readData<Map>(RpKeysConstants.videoPositionsKey) ?? {};
+          final positions =
+              storage.readData<Map>(RpKeysConstants.videoPositionsKey) ?? {};
           positions.remove(video.location);
           await storage.saveData(RpKeysConstants.videoPositionsKey, positions);
         }
-        
+
         if (AlbumContentController.to.currentContent.length > 1) {
           await AlbumContentController.to.goNextItemInPlaylist();
         }
