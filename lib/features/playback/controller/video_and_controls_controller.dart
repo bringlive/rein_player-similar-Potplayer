@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:rein_player/features/developer/controller/developer_log_controller.dart';
+import 'package:rein_player/features/playback/controller/ab_loop_controller.dart';
 import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/subtitle_controller.dart';
 import 'package:rein_player/features/playback/controller/volume_controller.dart';
@@ -123,6 +124,9 @@ class VideoAndControlController extends GetxController {
 
     // Load bookmarks for new video
     BookmarkController.to.loadBookmarksForVideo(media.location);
+
+    // Auto-load PBF file if exists
+    await ABLoopController.to.autoLoadPBFForVideo(media.location);
 
     VolumeController.to.currentVolume.value =
         VolumeController.to.currentVolume.value == 0

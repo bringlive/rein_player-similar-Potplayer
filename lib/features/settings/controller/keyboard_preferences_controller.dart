@@ -40,6 +40,12 @@ class KeyboardPreferencesController extends GetxController {
     'next_bookmark': LogicalKeyboardKey.keyB,
     'previous_bookmark': LogicalKeyboardKey.keyB, // With Shift
     'toggle_bookmark_list': LogicalKeyboardKey.keyB, // With Ctrl+Shift
+    'add_ab_loop_segment': LogicalKeyboardKey.keyL, // With Ctrl
+    'toggle_ab_loop_overlay': LogicalKeyboardKey.keyL,
+    'toggle_ab_loop_playback': LogicalKeyboardKey.keyL, // With Ctrl+Shift
+    'previous_ab_loop_segment': LogicalKeyboardKey.bracketLeft,
+    'next_ab_loop_segment': LogicalKeyboardKey.bracketRight,
+    'export_ab_loops': LogicalKeyboardKey.keyE, // With Ctrl+Shift
   };
 
   // Action descriptions for UI
@@ -69,6 +75,12 @@ class KeyboardPreferencesController extends GetxController {
     'next_bookmark': 'Jump to Next Bookmark',
     'previous_bookmark': 'Jump to Previous Bookmark',
     'toggle_bookmark_list': 'Toggle Bookmark List',
+    'add_ab_loop_segment': 'Add A-B Loop Segment',
+    'toggle_ab_loop_overlay': 'Toggle A-B Loop Overlay',
+    'toggle_ab_loop_playback': 'Start/Stop A-B Loop Playback',
+    'previous_ab_loop_segment': 'Jump to Previous A-B Loop Segment',
+    'next_ab_loop_segment': 'Jump to Next A-B Loop Segment',
+    'export_ab_loops': 'Export A-B Loops to PBF File',
   };
 
   @override
@@ -189,6 +201,11 @@ class KeyboardPreferencesController extends GetxController {
     if (key == LogicalKeyboardKey.arrowRight) return 'Arrow Right';
     if (key == LogicalKeyboardKey.pageUp) return 'Page Up';
     if (key == LogicalKeyboardKey.pageDown) return 'Page Down';
+
+    // Handle bracket keys
+    if (key == LogicalKeyboardKey.bracketLeft) return '[';
+    if (key == LogicalKeyboardKey.bracketRight) return ']';
+    if (key == LogicalKeyboardKey.delete) return 'Delete';
 
     // Handle letter keys
     if (key.keyLabel.length == 1) {

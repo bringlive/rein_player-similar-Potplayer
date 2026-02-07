@@ -4,6 +4,8 @@ import 'package:media_kit/media_kit.dart';
 import 'package:get/get.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/audio_track_controller.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:rein_player/features/playback/controller/ab_loop_controller.dart';
 import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playlist_type_controller.dart';
@@ -280,6 +282,113 @@ List<RpMenuItem> get defaultMenuData {
             } else {
               RpSnackbar.warning(message: 'No video is currently playing');
             }
+          },
+        ),
+      ],
+    ),
+
+    /// A-B Loop Segments
+    RpMenuItem(
+      text: "A-B Loop Segments",
+      icon: Icons.repeat,
+      subMenuItems: [
+        RpMenuItem(
+          icon: Icons.add,
+          text: "Add Segment at Current Position",
+          onTap: () async {
+            ABLoopController.to.addSegmentAtCurrentPosition();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.list,
+          text: "Show Segments",
+          onTap: () {
+            ABLoopController.to.toggleOverlay();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.play_circle,
+          text: "Start/Stop A-B Loop Playback",
+          onTap: () {
+            ABLoopController.to.toggleABLoopPlayback();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.skip_next,
+          text: "Next Segment",
+          onTap: () async {
+            await ABLoopController.to.jumpToNextSegment();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.skip_previous,
+          text: "Previous Segment",
+          onTap: () async {
+            await ABLoopController.to.jumpToPreviousSegment();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.file_upload,
+          text: "Import PBF File...",
+          onTap: () async {
+            final result = await FilePicker.platform.pickFiles(
+              type: FileType.custom,
+              allowedExtensions: ['pbf'],
+            );
+            if (result != null && result.files.single.path != null) {
+              await ABLoopController.to.importFromPBF(result.files.single.path!);
+            }
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.file_download,
+          text: "Export to PBF File...",
+          onTap: () async {
+            await ABLoopController.to.exportToPBF();
+          },
+        ),
+        RpMenuItem(
+          icon: Icons.clear_all,
+          text: "Clear All Segments",
+          onTap: () {
+            final segments = ABLoopController.to.segments;
+            if (segments.isEmpty) {
+              RpSnackbar.info(message: 'No segments to clear');
+              return;
+            }
+
+            // Show confirmation dialog
+            Get.dialog(
+              Builder(
+                builder: (context) => AlertDialog(
+                  backgroundColor: RpColors.gray_900,
+                  title: const Text(
+                    'Clear All Segments?',
+                    style: TextStyle(color: RpColors.white),
+                  ),
+                  content: const Text(
+                    'This will remove all A-B loop segments for this video. This action cannot be undone.',
+                    style: TextStyle(color: RpColors.white_300),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        ABLoopController.to.clearSegments();
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        'Clear All',
+                        style: TextStyle(color: RpColors.red),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
           },
         ),
       ],

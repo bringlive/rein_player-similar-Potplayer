@@ -13,6 +13,7 @@ import 'package:rein_player/features/settings/controller/settings_controller.dar
 import 'package:rein_player/features/settings/controller/subtitle_styling_controller.dart';
 import 'package:rein_player/features/playback/views/playback_speed_overlay.dart';
 import 'package:rein_player/features/playback/views/bookmark_overlay.dart';
+import 'package:rein_player/features/playback/views/ab_loop_overlay.dart';
 import 'package:rein_player/features/settings/views/menu/menu_items.dart';
 import 'package:rein_player/listeners/scroll_detector.dart';
 import 'package:rein_player/utils/constants/rp_enums.dart';
@@ -87,6 +88,9 @@ class RpVideoScreen extends StatelessWidget {
 
                     /// bookmark overlay
                     const BookmarkOverlay(),
+
+                    /// A-B loop overlay
+                    const ABLoopOverlay(),
                   ],
                 ),
               ),

@@ -303,9 +303,12 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
       'toggle_developer_log',
       'toggle_keyboard_bindings',
       'add_bookmark',
+      'add_ab_loop_segment',
     ];
     const actionsToHoldCtrlShift = [
       'toggle_bookmark_list',
+      'toggle_ab_loop_playback',
+      'export_ab_loops',
     ];
 
     if (actionsToHoldCtrlShift.contains(action)) {

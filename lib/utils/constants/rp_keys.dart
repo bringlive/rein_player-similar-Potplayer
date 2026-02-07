@@ -49,4 +49,7 @@ class RpKeysConstants {
 
   /// video bookmarks
   static const String videoBookmarksKey = "videoBookmarksKey";
+
+  /// A-B loop segments
+  static const String abLoopSegmentsKey = "abLoopSegmentsKey";
 }

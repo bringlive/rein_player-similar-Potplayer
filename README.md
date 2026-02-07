@@ -87,6 +87,12 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 | b                   | Jump to Next Bookmark         | ✅           |
 | Shift + b           | Jump to Previous Bookmark     | ✅           |
 | Ctrl + Shift + b    | Toggle Bookmark List          | ✅           |
+| Ctrl + l            | Add A-B Loop Segment          | ✅           |
+| l                   | Toggle A-B Loop Overlay       | ✅           |
+| Ctrl + Shift + l    | Start/Stop A-B Loop Playback  | ✅           |
+| [                   | Jump to Previous A-B Segment  | ✅           |
+| ]                   | Jump to Next A-B Segment      | ✅           |
+| Ctrl + Shift + e    | Export A-B Loops to PBF File  | ✅           |
 | Ctrl + k            | Toggle Keyboard Bindings      | ✅           |
 | Ctrl + d            | Toggle Developer Log          | ✅           |
 | x                   | Decrease Playback Speed       | ✅           |
@@ -174,6 +180,40 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Delete individual or clear all bookmarks
 - Automatic sorting by timestamp
 - Wrap-around navigation (loops to first/last)
+
+---
+
+### 🔁 A-B Loop Segments (PBF Support)
+
+**Advanced practice tool with full PotPlayer compatibility!**
+
+- **PotPlayer Bookmark File (.pbf) support**:
+  - Auto-load .pbf files when opening videos
+  - Import existing PotPlayer bookmark files
+  - Export segments back to .pbf format (fully compatible)
+- **Create multiple A-B loop segments per video**:
+  - Set start time and duration for each segment
+  - Configure loop count (how many times to repeat)
+  - Optional repeat delay (pause between loops)
+  - Add titles/labels to organize segments
+- **Intelligent playback engine**:
+  - Automatically loops each segment the specified number of times
+  - Moves to next segment after completing all loops
+  - Wraps around to first segment when sequence completes
+  - Pause on last frame between loops (configurable delay)
+- **Full CRUD operations**:
+  - Create segments with configuration modal
+  - Edit existing segments (all parameters)
+  - Delete individual or clear all segments
+  - Visual segment manager overlay
+- **Perfect for**:
+  - Language learning (loop dialogue sections)
+  - Music practice (repeat difficult passages)
+  - Dance/choreography (master specific moves)
+  - Sports analysis (study techniques frame-by-frame)
+  - Any scenario requiring repeated playback
+- **Coexists with simple bookmarks** - use both features independently
+- All segments persist between sessions and sync with storage
 
 ---
 

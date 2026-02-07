@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/developer/controller/developer_log_controller.dart';
+import 'package:rein_player/features/playback/controller/ab_loop_controller.dart';
 import 'package:rein_player/features/playback/controller/bookmark_controller.dart';
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/playback_speed_controller.dart';
@@ -132,6 +133,44 @@ class KeyboardController extends GetxController {
           await BookmarkController.to.jumpToNextBookmark();
           return;
         }
+      }
+
+      // A-B Loop operations (L key with various modifiers)
+      if (currentKey == LogicalKeyboardKey.keyL) {
+        // Ctrl+Shift+L: Toggle A-B loop playback
+        if (isCtrlPressed && isShiftPressed) {
+          ABLoopController.to.toggleABLoopPlayback();
+          return;
+        }
+        // Ctrl+L: Add segment at current position
+        if (isCtrlPressed && !isShiftPressed) {
+          ABLoopController.to.addSegmentAtCurrentPosition();
+          return;
+        }
+        // L alone: Toggle A-B loop overlay
+        if (!isCtrlPressed && !isShiftPressed) {
+          ABLoopController.to.toggleOverlay();
+          return;
+        }
+      }
+
+      // A-B Loop segment navigation
+      if (currentKey == LogicalKeyboardKey.bracketLeft) {
+        // [: Previous segment
+        await ABLoopController.to.jumpToPreviousSegment();
+        return;
+      }
+
+      if (currentKey == LogicalKeyboardKey.bracketRight) {
+        // ]: Next segment
+        await ABLoopController.to.jumpToNextSegment();
+        return;
+      }
+
+      // Export A-B loops to PBF
+      if (currentKey == LogicalKeyboardKey.keyE && isCtrlPressed && isShiftPressed) {
+        await ABLoopController.to.exportToPBF();
+        return;
       }
 
       // Toggle playlist (with Ctrl modifier)
