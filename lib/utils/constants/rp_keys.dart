@@ -26,4 +26,7 @@ class RpKeysConstants {
 
   /// keyboard bindings
   static const String keyboardBindingsKey = "keyboardBindingsKey";
+
+  /// video playback positions
+  static const String videoPositionsKey = "videoPositionsKey";
 }
