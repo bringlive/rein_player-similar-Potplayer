@@ -87,6 +87,7 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 | b                   | Jump to Next Bookmark         | ✅           |
 | Shift + b           | Jump to Previous Bookmark     | ✅           |
 | Ctrl + Shift + b    | Toggle Bookmark List          | ✅           |
+| Ctrl + p            | Toggle Playlist               | ✅           |
 | Ctrl + l            | Add A-B Loop Segment          | ✅           |
 | l                   | Toggle A-B Loop Overlay       | ✅           |
 | Ctrl + Shift + l    | Start/Stop A-B Loop Playback  | ✅           |

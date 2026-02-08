@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:rein_player/common/widgets/rp_dialog.dart';
 import 'package:rein_player/common/widgets/rp_snackbar.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
+import 'package:rein_player/features/player_frame/controller/navigation_context_controller.dart';
 import 'package:rein_player/features/playlist/controller/album_controller.dart';
 import 'package:rein_player/features/playlist/controller/playlist_controller.dart';
 import 'package:rein_player/features/playlist/models/playlist_item.dart';
@@ -223,20 +224,30 @@ class RpAlbumItems extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = AlbumContentController.to;
+    
     return Obx(() {
       return ListView.builder(
-        itemCount: AlbumContentController.to.currentContent.length,
+        controller: controller.scrollController,
+        itemCount: controller.currentContent.length,
         itemBuilder: (context, index) {
-          final media = AlbumContentController.to.currentContent[index];
+          final media = controller.currentContent[index];
           final isHovered = false.obs;
 
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: ContextMenuRegion(
+          return Obx(() {
+            final isSelected = controller.selectedIndex.value == index;
+            
+            return ContextMenuRegion(
               contextMenu: _createItemContextMenu(media, context),
               child: GestureDetector(
+                onTap: () {
+                  controller.selectedIndex.value = index;
+                  // Update persistent position
+                  controller.lastNavigationIndex.value = index;
+                  NavigationContextController.to.switchToPlaylist();
+                },
                 onDoubleTap: () =>
-                    AlbumContentController.to.handleItemOnTap(media),
+                    controller.handleItemOnTap(media),
                 child: MouseRegion(
                   onEnter: (_) => isHovered.value = true,
                   onExit: (_) => isHovered.value = false,
@@ -252,13 +263,11 @@ class RpAlbumItems extends StatelessWidget {
                         media.location;
 
                     final isDirectoryInVideoPath = media.isDirectory &&
-                        AlbumContentController.to
-                            .isDirectoryInCurrentVideoPath(media.location);
+                    controller.isDirectoryInCurrentVideoPath(media.location);
 
                     // Also check if this directory contains the album's current item to play
                     final isDirectoryContainsCurrentItem = media.isDirectory &&
-                        AlbumContentController.to
-                            .isDirectoryContainsAlbumCurrentItem(media.location);
+                    controller.isDirectoryContainsAlbumCurrentItem(media.location);
 
                     return Row(
                       children: [
@@ -267,6 +276,7 @@ class RpAlbumItems extends StatelessWidget {
                           media.isDirectory ? Icons.folder : Icons.video_file,
                           color: (isCurrentPlayingMedia ||
                                   isHovered.value ||
+                                  isSelected ||
                                   media.isDirectory ||
                                   isAlbumCurrentItemToPlay ||
                                   isDirectoryInVideoPath ||
@@ -285,6 +295,7 @@ class RpAlbumItems extends StatelessWidget {
                                 Theme.of(context).textTheme.bodySmall?.copyWith(
                                       color: (isCurrentPlayingMedia ||
                                               isHovered.value ||
+                                              isSelected ||
                                               isAlbumCurrentItemToPlay ||
                                               isDirectoryInVideoPath ||
                                               isDirectoryContainsCurrentItem)
@@ -325,8 +336,8 @@ class RpAlbumItems extends StatelessWidget {
                   }),
                 ),
               ),
-            ),
-          );
+            );
+          });
         },
       );
     });

@@ -27,7 +27,7 @@ class KeyboardPreferencesController extends GetxController {
     'volume_down': LogicalKeyboardKey.arrowDown,
     'toggle_mute': LogicalKeyboardKey.keyM,
     'toggle_subtitle': LogicalKeyboardKey.keyH,
-    'toggle_playlist': LogicalKeyboardKey.keyB, // With Ctrl
+    'toggle_playlist': LogicalKeyboardKey.keyP, // With Ctrl
     'toggle_developer_log': LogicalKeyboardKey.keyD, // With Ctrl
     'toggle_keyboard_bindings': LogicalKeyboardKey.keyK, // With Ctrl
     'decrease_speed': LogicalKeyboardKey.keyX,
