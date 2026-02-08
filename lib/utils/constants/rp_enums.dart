@@ -22,3 +22,8 @@ enum ActionContext {
   player,
   playlist
 }
+
+enum PlaylistEndBehavior {
+  showHomeScreen,
+  shutdown,
+}

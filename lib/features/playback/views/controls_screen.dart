@@ -36,6 +36,7 @@ class RpControls extends StatelessWidget {
 
                 /// type and time counter
                 const RpVideoTypeAndTimeCounter(),
+                
                 const Spacer(),
 
                 /// toggle playlist
@@ -80,29 +81,32 @@ class RpVideoTypeAndTimeCounter extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Obx(() => Text(ControlsController.to.getFormattedTimeWatched(),
-              style: Theme.of(context).textTheme.bodySmall)),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 7),
-            child: Text(
-              "/",
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall!
-                  .copyWith(color: RpColors.black_500),
+      child: FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Obx(() => Text(ControlsController.to.getFormattedTimeWatched(),
+                style: Theme.of(context).textTheme.bodySmall)),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: Text(
+                "/",
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall!
+                    .copyWith(color: RpColors.black_500),
+              ),
             ),
-          ),
-          Obx(
-            () => Text(
-              ControlsController.to.getFormattedTotalDuration(),
-              style: Theme.of(context).textTheme.bodySmall,
+            Obx(
+              () => Text(
+                ControlsController.to.getFormattedTotalDuration(),
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

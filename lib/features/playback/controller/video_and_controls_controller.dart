@@ -198,9 +198,26 @@ class VideoAndControlController extends GetxController {
           await storage.saveData(RpKeysConstants.videoPositionsKey, positions);
         }
 
-        if (AlbumContentController.to.currentContent.length > 1) {
+        // Check if there's a next item in the playlist
+        final currentVideoIndex = AlbumContentController.to.getIndexOfCurrentItemInPlaylist();
+        final hasNextItem = currentVideoIndex != -1 && 
+                           currentVideoIndex + 1 < AlbumContentController.to.currentContent.length;
+
+        if (hasNextItem) {
+          // Play next item
           await AlbumContentController.to.goNextItemInPlaylist();
+        } else {
+          final behavior = SettingsController.to.settings.playlistEndBehavior;
+          if (behavior == PlaylistEndBehavior.showHomeScreen) {
+            // Clear the video to show home screen
+            currentVideoUrl.value = '';
+            currentVideo.value = null;
+          } else if (behavior == PlaylistEndBehavior.shutdown) {
+            // Close the application
+            WindowActionsController.to.closeWindow();
+          }
         }
+        
         isVideoCompleted.value = false;
       }
     });

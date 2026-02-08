@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:get/get.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
@@ -30,6 +32,8 @@ class AlbumContentController extends GetxController {
       }
 
       currentContent.value = mediaFiles;
+      
+      loadDurationsInBackground();
     } finally {
       canNavigateBack.value = canNavigationStackBack();
     }
@@ -49,6 +53,8 @@ class AlbumContentController extends GetxController {
     if (items.isEmpty) return;
     if (clearBefore) currentContent.clear();
     currentContent.addAll(items);
+    
+    loadDurationsInBackground();
   }
 
   void navigateBack() {
@@ -92,10 +98,41 @@ class AlbumContentController extends GetxController {
   void updatePlaylistItemDuration(String url) {
     for (var item in currentContent) {
       if (item.location == url) {
-        item.duration.value = RpDurationHelper.formatDuration(
+        item.duration.value = RpDurationHelper.formatDurationAuto(
             ControlsController.to.videoDuration.value);
         break;
       }
+    }
+  }
+
+  Future<Duration?> _extractVideoDuration(String filePath) async {
+    try {
+      // Create a temporary player instance to extract metadata
+      final tempPlayer = Player();
+      await tempPlayer.open(Media(filePath));
+      
+      // Wait for duration to be available (with timeout)
+      Duration? duration;
+      final completer = Completer<Duration?>();
+      
+      final subscription = tempPlayer.stream.duration.listen((d) {
+        if (d != Duration.zero) {
+          completer.complete(d);
+        }
+      });
+      
+      // Timeout after 2 seconds
+      duration = await completer.future.timeout(
+        const Duration(seconds: 2),
+        onTimeout: () => null,
+      );
+      
+      subscription.cancel();
+      await tempPlayer.dispose();
+      
+      return duration;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -154,6 +191,19 @@ class AlbumContentController extends GetxController {
 
   void shufflePlaylistContent() {
     currentContent.shuffle();
+  }
+
+  Future<void> loadDurationsInBackground() async {
+    for (var item in currentContent) {
+      if (item.isDirectory || item.duration.value.isNotEmpty) continue;
+      
+      if (isMediaFile(item.location)) {
+        final duration = await _extractVideoDuration(item.location);
+        if (duration != null) {
+          item.duration.value = RpDurationHelper.formatDurationAuto(duration);
+        }
+      }
+    }
   }
 
   Future<void> loadSimilarContentInDefaultAlbum(String filename, String dirPath,

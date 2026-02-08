@@ -31,4 +31,10 @@ class SettingsController extends GetxController {
     await storage.saveData(RpKeysConstants.settingsKey, settings.toJson());
     update();
   }
+
+  Future<void> updatePlaylistEndBehavior(PlaylistEndBehavior behavior) async {
+    settings.playlistEndBehavior = behavior;
+    await storage.saveData(RpKeysConstants.settingsKey, settings.toJson());
+    update();
+  }
 }

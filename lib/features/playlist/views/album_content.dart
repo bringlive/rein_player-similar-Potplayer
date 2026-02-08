@@ -230,78 +230,100 @@ class RpAlbumItems extends StatelessWidget {
           final media = AlbumContentController.to.currentContent[index];
           final isHovered = false.obs;
 
-          return ContextMenuRegion(
-            contextMenu: _createItemContextMenu(media, context),
-            child: GestureDetector(
-              onDoubleTap: () =>
-                  AlbumContentController.to.handleItemOnTap(media),
-              child: MouseRegion(
-                onEnter: (_) => isHovered.value = true,
-                onExit: (_) => isHovered.value = false,
-                cursor: SystemMouseCursors.click,
-                child: Obx(() {
-                  final isCurrentPlayingMedia = VideoAndControlController
-                          .to.currentVideo.value?.location ==
-                      media.location;
-                  final isAlbumCurrentItemToPlay = AlbumController
-                          .to
-                          .albums[AlbumController.to.selectedAlbumIndex.value]
-                          .currentItemToPlay ==
-                      media.location;
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: ContextMenuRegion(
+              contextMenu: _createItemContextMenu(media, context),
+              child: GestureDetector(
+                onDoubleTap: () =>
+                    AlbumContentController.to.handleItemOnTap(media),
+                child: MouseRegion(
+                  onEnter: (_) => isHovered.value = true,
+                  onExit: (_) => isHovered.value = false,
+                  cursor: SystemMouseCursors.click,
+                  child: Obx(() {
+                    final isCurrentPlayingMedia = VideoAndControlController
+                            .to.currentVideo.value?.location ==
+                        media.location;
+                    final isAlbumCurrentItemToPlay = AlbumController
+                            .to
+                            .albums[AlbumController.to.selectedAlbumIndex.value]
+                            .currentItemToPlay ==
+                        media.location;
 
-                  final isDirectoryInVideoPath = media.isDirectory &&
-                      AlbumContentController.to
-                          .isDirectoryInCurrentVideoPath(media.location);
+                    final isDirectoryInVideoPath = media.isDirectory &&
+                        AlbumContentController.to
+                            .isDirectoryInCurrentVideoPath(media.location);
 
-                  // Also check if this directory contains the album's current item to play
-                  final isDirectoryContainsCurrentItem = media.isDirectory &&
-                      AlbumContentController.to
-                          .isDirectoryContainsAlbumCurrentItem(media.location);
+                    // Also check if this directory contains the album's current item to play
+                    final isDirectoryContainsCurrentItem = media.isDirectory &&
+                        AlbumContentController.to
+                            .isDirectoryContainsAlbumCurrentItem(media.location);
 
-                  return Row(
-                    children: [
-                      const SizedBox(width: 5),
-                      Icon(
-                        media.isDirectory ? Icons.folder : Icons.video_file,
-                        color: (isCurrentPlayingMedia ||
-                                isHovered.value ||
-                                media.isDirectory ||
-                                isAlbumCurrentItemToPlay ||
-                                isDirectoryInVideoPath ||
-                                isDirectoryContainsCurrentItem)
-                            ? RpColors.accent
-                            : Colors.white,
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-
-                      /// Title
-                      SizedBox(
-                        width: PlaylistController.to.playlistWindowWidth *
-                            (media.isDirectory ? 0.8 : 0.8),
-                        child: Text(
-                          "${index + 1}. ${media.name}",
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: (isCurrentPlayingMedia ||
-                                            isHovered.value ||
-                                            isAlbumCurrentItemToPlay ||
-                                            isDirectoryInVideoPath ||
-                                            isDirectoryContainsCurrentItem)
-                                        ? RpColors.accent
-                                        : RpColors.black_300,
-                                  ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
+                    return Row(
+                      children: [
+                        const SizedBox(width: 5),
+                        Icon(
+                          media.isDirectory ? Icons.folder : Icons.video_file,
+                          color: (isCurrentPlayingMedia ||
+                                  isHovered.value ||
+                                  media.isDirectory ||
+                                  isAlbumCurrentItemToPlay ||
+                                  isDirectoryInVideoPath ||
+                                  isDirectoryContainsCurrentItem)
+                              ? RpColors.accent
+                              : Colors.white,
+                          size: 15,
                         ),
-                      ),
-                      const Spacer(),
+                        const SizedBox(width: 5),
 
-                      /// video duration
-                      // Text(media.duration.value)
-                    ],
-                  );
-                }),
+                        /// Title
+                        Expanded(
+                          child: Text(
+                            "${index + 1}. ${media.name}",
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: (isCurrentPlayingMedia ||
+                                              isHovered.value ||
+                                              isAlbumCurrentItemToPlay ||
+                                              isDirectoryInVideoPath ||
+                                              isDirectoryContainsCurrentItem)
+                                          ? RpColors.accent
+                                          : RpColors.black_300,
+                                    ),
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 1,
+                          ),
+                        ),
+
+                        /// video duration
+                        Obx(() {
+                          final durationText = media.duration.value;
+                          if (durationText.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Text(
+                              durationText,
+                              style: TextStyle(
+                                color: (isCurrentPlayingMedia ||
+                                        isHovered.value ||
+                                        isAlbumCurrentItemToPlay ||
+                                        isDirectoryInVideoPath ||
+                                        isDirectoryContainsCurrentItem)
+                                    ? RpColors.accent
+                                    : RpColors.black_300,
+                                fontSize: 11,
+                              ),
+                            ),
+                          );
+                        }),
+                        const SizedBox(width: 5),
+                      ],
+                    );
+                  }),
+                ),
               ),
             ),
           );
