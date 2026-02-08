@@ -8,10 +8,10 @@ class AppInfo {
   static const String appName = 'ReinPlayer';
 
   /// Current version - should match pubspec.yaml
-  static const String version = '1.0.2';
+  static const String version = '1.1.0';
 
   /// Build number
-  static const String buildNumber = '1';
+  static const String buildNumber = '2';
 
   /// Full version string
   static String get fullVersion => '$version+$buildNumber';
