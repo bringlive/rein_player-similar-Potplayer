@@ -9,6 +9,9 @@ on:
     tags:
       - 'v*'
 
+permissions:
+  contents: write
+
 env:
   FLUTTER_VERSION: ${{ github.event.inputs.flutter_version || '3.32.0' }}
   FLUTTER_CHANNEL: ${{ github.event.inputs.flutter_channel || 'stable' }}
