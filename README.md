@@ -437,7 +437,19 @@ sudo apt remove reinplayer
    sudo apt install libmpv2 libmpv-dev zenity
    ```
 
-2. **macOS Security**: If macOS blocks the app, go to System Preferences > Security & Privacy and allow the application to run.
+2. **macOS Security Warning**: 
+   
+   When first opening ReinPlayer downloaded from GitHub, macOS may show *"cannot verify developer"* warning because the app is not code-signed.
+   
+   **Quick Fix:**
+   - Right-click (or Control+click) the app → Select **"Open"** → Click **"Open"** again
+   
+   **Alternative (Terminal):**
+   ```bash
+   xattr -dr com.apple.quarantine /Applications/rein_player.app
+   ```
+   
+   Or go to **System Settings** → **Privacy & Security** → Click **"Open Anyway"**
 
 **Note:** Snap package users don't need any additional setup - all dependencies are included!
 
