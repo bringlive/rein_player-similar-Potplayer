@@ -165,6 +165,7 @@ ReinPlayer follows the **MVVM** architecture along with a hybrid **feature + lay
 - Configurable playlist end behavior:
   - Show Home Screen: Display ReinPlayer logo on black background when playlist ends (default)
   - Shutdown Application: Automatically close the app when playlist ends
+- Video duration display with lazy loading and auto-formatting (MM:SS or HH:MM:SS)
 
 ---
 
