@@ -63,7 +63,7 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header
+            // Header with integrated toggle
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -75,9 +75,42 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
                         fontSize: 18,
                       ),
                 ),
-                IconButton(
-                  onPressed: () => Get.back(),
-                  icon: const Icon(Icons.close, color: RpColors.white),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Compact enable/disable toggle
+                    Obx(() {
+                      final isEnabled = KeyboardPreferencesController.to.shortcutsEnabled.value;
+                      return Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            isEnabled ? 'Enabled' : 'Disabled',
+                            style: const TextStyle(color: RpColors.white, fontSize: 14),
+                          ),
+                          const SizedBox(width: 6),
+                          Transform.scale(
+                            scale: 0.8,
+                            child:                             Switch(
+                              value: isEnabled,
+                              onChanged: (value) async {
+                                await KeyboardPreferencesController.to.toggleShortcuts(value);
+                              },
+                              activeColor: RpColors.accent,
+                              inactiveThumbColor: RpColors.white_300,
+                              inactiveTrackColor: RpColors.black_600,
+                              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: () => Get.back(),
+                      icon: const Icon(Icons.close, color: RpColors.white),
+                    ),
+                  ],
                 ),
               ],
             ),
@@ -90,7 +123,35 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
                     fontSize: 14,
                   ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
+
+            // Warning banner when shortcuts are disabled
+            Obx(() {
+              if (!KeyboardPreferencesController.to.shortcutsEnabled.value) {
+                return Container(
+                  padding: const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 16),
+                  decoration: BoxDecoration(
+                    color: RpColors.orange.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: RpColors.orange.withValues(alpha: 0.5)),
+                  ),
+                  child: const Row(
+                    children: [
+                      Icon(Icons.warning_amber_rounded, color: RpColors.orange, size: 18),
+                      SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          'Keyboard shortcuts are currently disabled. Use the toggle above to enable them.',
+                          style: TextStyle(color: RpColors.orange, fontSize: 12),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            }),
 
             // Action buttons
             Row(
@@ -229,11 +290,32 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
     );
   }
 
-  Widget _buildSubtitle(String action) {
-    const actionsToHoldShift = ['big_seek_backward', 'big_seek_forward'];
-    const actionsToHoldCtrl = ['toggle_playlist', 'toggle_developer_log'];
+  Widget? _buildSubtitle(String action) {
+    const actionsToHoldShift = [
+      'big_seek_backward',
+      'big_seek_forward',
+      'delete_and_skip',
+      'previous_bookmark',
+    ];
+    const actionsToHoldCtrl = [
+      'toggle_playlist',
+      'toggle_developer_log',
+      'toggle_keyboard_bindings',
+      'add_bookmark',
+      'add_ab_loop_segment',
+    ];
+    const actionsToHoldCtrlShift = [
+      'toggle_bookmark_list',
+      'toggle_ab_loop_playback',
+      'export_ab_loops',
+    ];
 
-    if (actionsToHoldShift.contains(action)) {
+    if (actionsToHoldCtrlShift.contains(action)) {
+      return const Text(
+        'Hold Ctrl + Shift + key',
+        style: TextStyle(color: RpColors.black_500, fontSize: 11),
+      );
+    } else if (actionsToHoldShift.contains(action)) {
       return const Text(
         'Hold Shift + key',
         style: TextStyle(color: RpColors.black_500, fontSize: 11),
@@ -244,7 +326,7 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
         style: TextStyle(color: RpColors.black_500, fontSize: 11),
       );
     }
-    return const SizedBox.shrink();
+    return null;
   }
 
   void _startEditingKey(String action) {

@@ -12,6 +12,8 @@ class KeyboardPreferencesController extends GetxController {
   final RxMap<String, LogicalKeyboardKey> keyBindings =
       <String, LogicalKeyboardKey>{}.obs;
 
+  final RxBool shortcutsEnabled = true.obs;
+
   // Default keyboard bindings
   static const Map<String, LogicalKeyboardKey> defaultBindings = {
     'play_pause': LogicalKeyboardKey.space,
@@ -25,12 +27,25 @@ class KeyboardPreferencesController extends GetxController {
     'volume_down': LogicalKeyboardKey.arrowDown,
     'toggle_mute': LogicalKeyboardKey.keyM,
     'toggle_subtitle': LogicalKeyboardKey.keyH,
-    'toggle_playlist': LogicalKeyboardKey.keyB, // With Ctrl
+    'toggle_playlist': LogicalKeyboardKey.keyP, // With Ctrl
     'toggle_developer_log': LogicalKeyboardKey.keyD, // With Ctrl
+    'toggle_keyboard_bindings': LogicalKeyboardKey.keyK, // With Ctrl
     'decrease_speed': LogicalKeyboardKey.keyX,
     'increase_speed': LogicalKeyboardKey.keyC,
     'next_track': LogicalKeyboardKey.pageDown,
     'previous_track': LogicalKeyboardKey.pageUp,
+    'delete_and_skip': LogicalKeyboardKey.delete, // With Shift
+    'shuffle_playlist': LogicalKeyboardKey.keyS,
+    'add_bookmark': LogicalKeyboardKey.keyB, // With Ctrl
+    'next_bookmark': LogicalKeyboardKey.keyB,
+    'previous_bookmark': LogicalKeyboardKey.keyB, // With Shift
+    'toggle_bookmark_list': LogicalKeyboardKey.keyB, // With Ctrl+Shift
+    'add_ab_loop_segment': LogicalKeyboardKey.keyL, // With Ctrl
+    'toggle_ab_loop_overlay': LogicalKeyboardKey.keyL,
+    'toggle_ab_loop_playback': LogicalKeyboardKey.keyL, // With Ctrl+Shift
+    'previous_ab_loop_segment': LogicalKeyboardKey.bracketLeft,
+    'next_ab_loop_segment': LogicalKeyboardKey.bracketRight,
+    'export_ab_loops': LogicalKeyboardKey.keyE, // With Ctrl+Shift
   };
 
   // Action descriptions for UI
@@ -49,10 +64,23 @@ class KeyboardPreferencesController extends GetxController {
     'exit_fullscreen': 'Exit Fullscreen',
     'toggle_playlist': 'Toggle Playlist',
     'toggle_developer_log': 'Toggle Developer Log',
+    'toggle_keyboard_bindings': 'Toggle Keyboard Bindings',
     'decrease_speed': 'Decrease Playback Speed',
     'increase_speed': 'Increase Playback Speed',
     'next_track': 'Next Track',
     'previous_track': 'Previous Track',
+    'delete_and_skip': 'Delete playlist Item and Skip to Next',
+    'shuffle_playlist': 'Shuffle Playlist',
+    'add_bookmark': 'Add Bookmark',
+    'next_bookmark': 'Jump to Next Bookmark',
+    'previous_bookmark': 'Jump to Previous Bookmark',
+    'toggle_bookmark_list': 'Toggle Bookmark List',
+    'add_ab_loop_segment': 'Add A-B Loop Segment',
+    'toggle_ab_loop_overlay': 'Toggle A-B Loop Overlay',
+    'toggle_ab_loop_playback': 'Start/Stop A-B Loop Playback',
+    'previous_ab_loop_segment': 'Jump to Previous A-B Loop Segment',
+    'next_ab_loop_segment': 'Jump to Next A-B Loop Segment',
+    'export_ab_loops': 'Export A-B Loops to PBF File',
   };
 
   @override
@@ -65,6 +93,10 @@ class KeyboardPreferencesController extends GetxController {
     try {
       final savedBindings =
           storage.readData<Map>(RpKeysConstants.keyboardBindingsKey);
+
+      // Load shortcuts enabled state
+      final savedEnabled = storage.readData<bool>(RpKeysConstants.keyboardShortcutsEnabledKey);
+      shortcutsEnabled.value = savedEnabled ?? true;
 
       if (savedBindings != null) {
         // Convert saved data back to LogicalKeyboardKey objects
@@ -170,6 +202,11 @@ class KeyboardPreferencesController extends GetxController {
     if (key == LogicalKeyboardKey.pageUp) return 'Page Up';
     if (key == LogicalKeyboardKey.pageDown) return 'Page Down';
 
+    // Handle bracket keys
+    if (key == LogicalKeyboardKey.bracketLeft) return '[';
+    if (key == LogicalKeyboardKey.bracketRight) return ']';
+    if (key == LogicalKeyboardKey.delete) return 'Delete';
+
     // Handle letter keys
     if (key.keyLabel.length == 1) {
       return key.keyLabel.toUpperCase();
@@ -180,5 +217,11 @@ class KeyboardPreferencesController extends GetxController {
 
   LogicalKeyboardKey? getKeyForAction(String action) {
     return keyBindings[action];
+  }
+
+  Future<void> toggleShortcuts(bool enabled) async {
+    shortcutsEnabled.value = enabled;
+    await storage.saveData(RpKeysConstants.keyboardShortcutsEnabledKey, enabled);
+    update();
   }
 }

@@ -1,5 +1,8 @@
+import 'dart:async';
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:media_kit/media_kit.dart';
 import 'package:path/path.dart' as path;
 import 'package:rein_player/features/playback/controller/controls_controller.dart';
 import 'package:rein_player/features/playback/controller/video_and_controls_controller.dart';
@@ -20,6 +23,14 @@ class AlbumContentController extends GetxController {
 
   final List<String> _navigationStack = [];
 
+  // Keyboard navigation properties
+  // -1 means no selection
+  final RxInt selectedIndex = (-1).obs;
+  final RxInt lastNavigationIndex = (-1).obs;
+  final RxBool isKeyboardNavigating = false.obs;
+  final ScrollController scrollController = ScrollController();
+  Timer? _selectionTimer;
+
   Future<void> loadDirectory(String dirPath, {navDirection = "down"}) async {
     try {
       final List<PlaylistItem> mediaFiles =
@@ -30,6 +41,9 @@ class AlbumContentController extends GetxController {
       }
 
       currentContent.value = mediaFiles;
+      
+      loadDurationsInBackground();
+      _initializeNavigationPosition();
     } finally {
       canNavigateBack.value = canNavigationStackBack();
     }
@@ -47,8 +61,18 @@ class AlbumContentController extends GetxController {
   void addItemsToPlaylistContent(List<PlaylistItem> items,
       {clearBefore = false}) {
     if (items.isEmpty) return;
-    if (clearBefore) currentContent.clear();
+    if (clearBefore) {
+      currentContent.clear();
+      // Reset navigation when clearing content
+      lastNavigationIndex.value = -1;
+      selectedIndex.value = -1;
+    }
     currentContent.addAll(items);
+    
+    loadDurationsInBackground();
+
+    // Initialize position after adding items
+    _initializeNavigationPosition();
   }
 
   void navigateBack() {
@@ -92,10 +116,41 @@ class AlbumContentController extends GetxController {
   void updatePlaylistItemDuration(String url) {
     for (var item in currentContent) {
       if (item.location == url) {
-        item.duration.value = RpDurationHelper.formatDuration(
+        item.duration.value = RpDurationHelper.formatDurationAuto(
             ControlsController.to.videoDuration.value);
         break;
       }
+    }
+  }
+
+  Future<Duration?> _extractVideoDuration(String filePath) async {
+    try {
+      // Create a temporary player instance to extract metadata
+      final tempPlayer = Player();
+      await tempPlayer.open(Media(filePath));
+      
+      // Wait for duration to be available (with timeout)
+      Duration? duration;
+      final completer = Completer<Duration?>();
+      
+      final subscription = tempPlayer.stream.duration.listen((d) {
+        if (d != Duration.zero) {
+          completer.complete(d);
+        }
+      });
+      
+      // Timeout after 2 seconds
+      duration = await completer.future.timeout(
+        const Duration(seconds: 2),
+        onTimeout: () => null,
+      );
+      
+      subscription.cancel();
+      await tempPlayer.dispose();
+      
+      return duration;
+    } catch (e) {
+      return null;
     }
   }
 
@@ -150,6 +205,23 @@ class AlbumContentController extends GetxController {
 
   void sortPlaylistContent() {
     currentContent.sort(RpMediaHelper.sortMediaFiles);
+  }
+
+  void shufflePlaylistContent() {
+    currentContent.shuffle();
+  }
+
+  Future<void> loadDurationsInBackground() async {
+    for (var item in currentContent) {
+      if (item.isDirectory || item.duration.value.isNotEmpty) continue;
+      
+      if (isMediaFile(item.location)) {
+        final duration = await _extractVideoDuration(item.location);
+        if (duration != null) {
+          item.duration.value = RpDurationHelper.formatDurationAuto(duration);
+        }
+      }
+    }
   }
 
   Future<void> loadSimilarContentInDefaultAlbum(String filename, String dirPath,
@@ -296,5 +368,168 @@ class AlbumContentController extends GetxController {
     } catch (e) {
       // Handle error silently
     }
+  }
+
+  Future<bool> deleteCurrentItemAndSkip() async {
+    try {
+      final currentVideo = VideoAndControlController.to.currentVideo.value;
+      if (currentVideo == null) return false;
+
+      final currentIndex = currentContent.indexWhere(
+        (item) => item.location == currentVideo.location,
+      );
+
+      if (currentIndex == -1) return false;
+
+      final itemToDelete = currentContent[currentIndex];
+
+      final hasNext = currentIndex + 1 < currentContent.length;
+
+      if (hasNext) {
+        final nextItem = currentContent[currentIndex + 1];
+        await VideoAndControlController.to
+            .loadVideoFromUrl(nextItem.toVideoOrAudioItem());
+        AlbumController.to.updateAlbumCurrentItemToPlay(nextItem.location);
+        await AlbumController.to.dumpAllAlbumsToStorage();
+      }
+
+      final file = File(itemToDelete.location);
+      if (await file.exists()) {
+        await file.delete();
+        removeItemFromPlaylist(itemToDelete);
+        return true;
+      }
+
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // Keyboard navigation methods
+  void selectNextItem() {
+    if (currentContent.isEmpty) return;
+
+    // If no current selection, start from last known position
+    if (selectedIndex.value == -1) {
+      selectedIndex.value =
+          lastNavigationIndex.value >= 0 ? lastNavigationIndex.value : 0;
+    }
+
+    if (selectedIndex.value < (currentContent.length - 1)) {
+      selectedIndex.value++;
+      lastNavigationIndex.value = selectedIndex.value; 
+      isKeyboardNavigating.value = true;
+      _scrollToSelected();
+      _resetSelectionTimer();
+    }
+  }
+
+  void selectPreviousItem() {
+    if (currentContent.isEmpty) return;
+
+    // If no current selection, start from last known position
+    if (selectedIndex.value == -1) {
+      selectedIndex.value =
+          lastNavigationIndex.value >= 0 ? lastNavigationIndex.value : 0;
+    }
+
+    if (selectedIndex.value > 0) {
+      selectedIndex.value--;
+      lastNavigationIndex.value = selectedIndex.value;
+      isKeyboardNavigating.value = true;
+      _scrollToSelected();
+      _resetSelectionTimer();
+    }
+  }
+
+  void playSelectedItem() {
+    if (selectedIndex.value >= 0 &&
+        selectedIndex.value < currentContent.length) {
+      handleItemOnTap(currentContent[selectedIndex.value]);
+      _cancelSelectionTimer();
+    }
+  }
+
+  void selectCurrentPlayingItem() {
+    // Find and select the currently playing video
+    final currentUrl = VideoAndControlController.to.currentVideoUrl.value;
+    if (currentUrl.isNotEmpty) {
+      final index =
+          currentContent.indexWhere((item) => item.location == currentUrl);
+      if (index >= 0) {
+        selectedIndex.value = index;
+        _scrollToSelected();
+        _resetSelectionTimer();
+      } else {
+        // Fallback to first item if current video not found in list
+        if (currentContent.isNotEmpty) {
+          selectedIndex.value = 0;
+          _resetSelectionTimer();
+        }
+      }
+    } else if (currentContent.isNotEmpty) {
+      selectedIndex.value = 0;
+      _resetSelectionTimer();
+    }
+  }
+
+  void _initializeNavigationPosition() {
+    // Find current playing video index
+    final currentUrl = VideoAndControlController.to.currentVideoUrl.value;
+    if (currentUrl.isNotEmpty) {
+      final index =
+          currentContent.indexWhere((item) => item.location == currentUrl);
+      if (index >= 0) {
+        lastNavigationIndex.value = index;
+      } else if (currentContent.isNotEmpty) {
+        lastNavigationIndex.value = 0;
+      }
+    } else if (currentContent.isNotEmpty) {
+      lastNavigationIndex.value = 0;
+    }
+  }
+
+  void _resetSelectionTimer() {
+    _cancelSelectionTimer();
+    _selectionTimer = Timer(const Duration(seconds: 3), () {
+      selectedIndex.value = -1;
+      isKeyboardNavigating.value = false;
+    });
+  }
+
+  void _cancelSelectionTimer() {
+    _selectionTimer?.cancel();
+    _selectionTimer = null;
+  }
+
+  void _scrollToSelected() {
+    if (selectedIndex.value < 0 || !scrollController.hasClients) return;
+
+    // Calculate approximate item height
+    const double itemHeight = 30.0;
+    final double targetOffset = selectedIndex.value * itemHeight;
+
+    // Get viewport dimensions
+    final double viewportHeight = scrollController.position.viewportDimension;
+    final double currentOffset = scrollController.offset;
+
+    // Check if item is already visible
+    if (targetOffset < currentOffset ||
+        targetOffset > currentOffset + viewportHeight - itemHeight) {
+      // Scroll to make the item visible with some padding
+      scrollController.animateTo(
+        targetOffset - (viewportHeight / 2) + (itemHeight / 2),
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
+
+  @override
+  void onClose() {
+    _cancelSelectionTimer();
+    scrollController.dispose();
+    super.onClose();
   }
 }
