@@ -30,6 +30,9 @@ class RpKeysConstants {
   /// playlist load behavior
   static const String playlistLoadBehaviorKey = "playlistLoadBehaviorKey";
 
+  /// playlist end behavior
+  static const String playlistEndBehaviorKey = "playlistEndBehaviorKey";
+
   /// seek settings
   static const String seekSettingsKey = "seekSettingsKey";
   static const String seekModeKey = "seekModeKey";

@@ -263,13 +263,11 @@ class RpAlbumItems extends StatelessWidget {
                         media.location;
 
                     final isDirectoryInVideoPath = media.isDirectory &&
-                        controller
-                            .isDirectoryInCurrentVideoPath(media.location);
+                    controller.isDirectoryInCurrentVideoPath(media.location);
 
                     // Also check if this directory contains the album's current item to play
                     final isDirectoryContainsCurrentItem = media.isDirectory &&
-                        controller
-                            .isDirectoryContainsAlbumCurrentItem(media.location);
+                    controller.isDirectoryContainsAlbumCurrentItem(media.location);
 
                     return Row(
                       children: [
@@ -290,9 +288,7 @@ class RpAlbumItems extends StatelessWidget {
                         const SizedBox(width: 5),
 
                         /// Title
-                        SizedBox(
-                          width: PlaylistController.to.playlistWindowWidth *
-                              (media.isDirectory ? 0.8 : 0.8),
+                        Expanded(
                           child: Text(
                             "${index + 1}. ${media.name}",
                             style:
@@ -310,10 +306,31 @@ class RpAlbumItems extends StatelessWidget {
                             maxLines: 1,
                           ),
                         ),
-                        const Spacer(),
 
                         /// video duration
-                        // Text(media.duration.value)
+                        Obx(() {
+                          final durationText = media.duration.value;
+                          if (durationText.isEmpty) {
+                            return const SizedBox.shrink();
+                          }
+                          return Padding(
+                            padding: const EdgeInsets.only(left: 8, right: 8),
+                            child: Text(
+                              durationText,
+                              style: TextStyle(
+                                color: (isCurrentPlayingMedia ||
+                                        isHovered.value ||
+                                        isAlbumCurrentItemToPlay ||
+                                        isDirectoryInVideoPath ||
+                                        isDirectoryContainsCurrentItem)
+                                    ? RpColors.accent
+                                    : RpColors.black_300,
+                                fontSize: 11,
+                              ),
+                            ),
+                          );
+                        }),
+                        const SizedBox(width: 5),
                       ],
                     );
                   }),

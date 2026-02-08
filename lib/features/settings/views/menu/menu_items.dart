@@ -120,6 +120,44 @@ List<RpMenuItem> get defaultMenuData {
             }
           },
         ),
+        RpMenuItem(
+          text: "When Playlist Ends",
+          icon: Icons.playlist_remove,
+          subMenuItems: [
+            RpMenuItem(
+              icon: SettingsController.to.settings.playlistEndBehavior == 
+                    PlaylistEndBehavior.showHomeScreen
+                  ? Icons.check
+                  : null,
+              text: "Show Home Screen",
+              onTap: () async {
+                await SettingsController.to.updatePlaylistEndBehavior(
+                  PlaylistEndBehavior.showHomeScreen,
+                );
+                RpSnackbar.success(
+                  title: 'Playlist End Behavior Updated',
+                  message: 'Will show home screen when playlist ends',
+                );
+              },
+            ),
+            RpMenuItem(
+              icon: SettingsController.to.settings.playlistEndBehavior == 
+                    PlaylistEndBehavior.shutdown
+                  ? Icons.check
+                  : null,
+              text: "Shutdown Application",
+              onTap: () async {
+                await SettingsController.to.updatePlaylistEndBehavior(
+                  PlaylistEndBehavior.shutdown,
+                );
+                RpSnackbar.success(
+                  title: 'Playlist End Behavior Updated',
+                  message: 'Will shutdown when playlist ends',
+                );
+              },
+            ),
+          ],
+        ),
       ],
     ),
 
