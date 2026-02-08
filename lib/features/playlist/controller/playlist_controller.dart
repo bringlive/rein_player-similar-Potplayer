@@ -34,13 +34,24 @@ class PlaylistController extends GetxController {
   }
 
   Future<void> _resizeWindowForPlaylist(bool wasOpened) async {
+    final isMaximized = await windowManager.isMaximized();
+    
+    // If maximized, don't resize - let the layout handle it
+    if (isMaximized) {
+      return;
+    }
+    
+    // If not maximized, resize the window
     final currentSize = await windowManager.getSize();
+    
     if (wasOpened) {
+      // Closing playlist - subtract playlist width
       await windowManager.setSize(Size(
           currentSize.width - playlistWindowWidth.value, currentSize.height));
     } else {
-      await windowManager.setSize(Size(
-          currentSize.width + playlistWindowWidth.value, currentSize.height));
+      // Opening playlist - add playlist width
+      final newWidth = currentSize.width + playlistWindowWidth.value;
+      await windowManager.setSize(Size(newWidth, currentSize.height));
     }
   }
 

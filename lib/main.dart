@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:media_kit/media_kit.dart';
 import 'package:rein_player/core/video_player.dart';
@@ -37,6 +38,25 @@ void main(List<String> args) async {
 
   // Wait for bindings to be initialized
   await Future.delayed(Duration.zero);
+
+  // Set up file handler channel for macOS Finder file opening
+  if (Platform.isMacOS) {
+    const fileChannel = MethodChannel('com.reinplayer/file_handler');
+    fileChannel.setMethodCallHandler((call) async {
+      if (call.method == 'openFiles') {
+        try {
+          final List<String> filePaths = List<String>.from(call.arguments);
+          DeveloperLogController.to
+              .log("Received files from Finder: $filePaths");
+          if (filePaths.isNotEmpty) {
+            await VideoAndControlController.to.handleCommandLineArgs(filePaths);
+          }
+        } catch (e) {
+          DeveloperLogController.to.log("Error handling files from Finder: $e");
+        }
+      }
+    });
+  }
 
   DeveloperLogController.to.log("arms $args");
   if (args.isNotEmpty) {
