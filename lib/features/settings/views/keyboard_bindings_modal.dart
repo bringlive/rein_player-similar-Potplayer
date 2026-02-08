@@ -91,13 +91,12 @@ class _KeyboardBindingsModalState extends State<KeyboardBindingsModal> {
                           const SizedBox(width: 6),
                           Transform.scale(
                             scale: 0.8,
-                            child: Switch(
+                            child:                             Switch(
                               value: isEnabled,
                               onChanged: (value) async {
                                 await KeyboardPreferencesController.to.toggleShortcuts(value);
                               },
-                              activeTrackColor: RpColors.accent,
-                              activeThumbColor: RpColors.black_600,
+                              activeColor: RpColors.accent,
                               inactiveThumbColor: RpColors.white_300,
                               inactiveTrackColor: RpColors.black_600,
                               materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
