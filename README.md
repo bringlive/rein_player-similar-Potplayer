@@ -412,6 +412,22 @@ cd reinplayer_linux_amd64_portable
 
 ---
 
+### 🏅 Method 4: Arch Linux / Manjaro (AUR)
+
+**Install seamlessly from the [Arch User Repository](https://aur.archlinux.org/packages/reinplayer-bin) using an AUR helper (e.g., `yay` or `paru`):**
+
+```bash
+yay -S reinplayer-bin
+```
+
+**Benefits:**
+
+- ✅ Dependencies (`mpv`, `gtk3`) are handled automatically
+- ✅ Desktop shortcut (`.desktop`) and icon are pre-configured
+- ✅ Easy uninstallation and system integration
+
+---
+
 ### 🗑️ Uninstall
 
 **Snap:**
@@ -424,6 +440,12 @@ sudo snap remove reinplayer
 
 ```bash
 sudo apt remove reinplayer
+```
+
+**Arch Linux / Manjaro (AUR):**
+
+```bash
+yay -R reinplayer-bin
 ```
 
 ---
